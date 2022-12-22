@@ -1,6 +1,7 @@
 package service;
 
 import domain.User;
+import domain.validators.ValidationException;
 import domain.validators.ValidatorUser;
 import repository.RepositoryDBUsers;
 import repository.RepositoryException;
@@ -15,9 +16,10 @@ public class Service {
 
     public void addUser(List<String> arg) throws ServiceException {
         try {
+            validatorUser.validate(arg);
             repositoryDBUsers.add(new User(arg.get(0),arg.get(1),arg.get(2),arg.get(3)));
 
-        }catch (RepositoryException e){
+        }catch (RepositoryException | ValidationException e){
             throw new ServiceException(e.getMessage());
 
         }

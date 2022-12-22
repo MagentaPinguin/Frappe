@@ -3,13 +3,10 @@ package application.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputMethodEvent;
+
 import javafx.stage.Stage;
 import service.Service;
 import service.ServiceException;
@@ -74,12 +71,33 @@ public class RegisterGui {
     public void joinNetwork( ) {
         try {
             service.addUser(List.of(inputUsername.getText(),inputPasswd.getText(),inputFirstName.getText(),inputLastName.getText()));
+            Alert a= new Alert(Alert.AlertType.CONFIRMATION,"Welcome to the club, Brew!",new ButtonType("YEY"));
+            //Alert created
+            Image img = new Image("images/success_coffee.png", 120, 120, true, true);
+            //Changed icon of the information
+            Stage stage = (Stage) a.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image("images/frappe_icon.png"));
+            //Set icon of a stage
+
+            a.setTitle("Brew created");
+            a.setGraphic( new ImageView(img));
+            //Final settings
+            a.show();
 
         } catch (ServiceException e) {
-            Alert a=new Alert(Alert.AlertType.ERROR);
-            a.setTitle("REGISTER LOGIN");
-            a.setContentText(e.getMessage());
+            Alert a= new Alert(Alert.AlertType.ERROR,e.getMessage(),new ButtonType("Okey...."));
+
+            Image img = new Image("images/error_coffee.png", 120, 120, true, true);
+
+            Stage stage = (Stage) a.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image("images/frappe_icon.png"));
+
+            a.setTitle("ERROR");
+            a.setGraphic( new ImageView(img));
+
             a.show();
+
+
         };
 
     }

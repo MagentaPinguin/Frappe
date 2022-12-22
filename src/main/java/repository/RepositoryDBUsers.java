@@ -32,7 +32,6 @@ public class RepositoryDBUsers implements Repository<User> {
         try(Connection connection = DriverManager.getConnection(urlDb, usernameDb, passwdDb);
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
 
-
             preparedStatement.setString(1, entity.getUserName());
             preparedStatement.setString(2, entity.getPasswd());
             preparedStatement.setString(3, entity.getFirstName());
@@ -103,7 +102,7 @@ public class RepositoryDBUsers implements Repository<User> {
         } catch (SQLException e) {
             return null;
         }
-        System.out.println(user);
+
         return user;
 
     }
@@ -129,7 +128,7 @@ public class RepositoryDBUsers implements Repository<User> {
 
         }
 
-        System.out.println(user);
+
         return user;
     }
 

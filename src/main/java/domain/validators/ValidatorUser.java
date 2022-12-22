@@ -14,7 +14,7 @@ public class ValidatorUser implements Validator {
         if (args.get(0).isBlank())
              msg.add("Username blank.");
         if (args.get(1).isBlank())
-            msg.add("Passwd blank.");
+            msg.add("Password blank.");
         if (args.get(2).isBlank())
            msg.add("Firstname blank.");
         if (args.get(3).isBlank())
