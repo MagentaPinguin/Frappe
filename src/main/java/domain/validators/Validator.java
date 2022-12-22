@@ -1,6 +1,8 @@
 package domain.validators;
 
-public interface Validator<E> {
-    void validate(E e) throws ValidationException;
+import java.util.List;
+
+public interface Validator {
+    void validate(List<String> args) throws ValidationException;
 }
 //"General validator interface

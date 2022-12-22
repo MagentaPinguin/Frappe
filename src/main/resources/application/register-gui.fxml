@@ -15,21 +15,21 @@
       <children>
          <VBox spacing="10.0">
             <children>
-               <TextField fx:id="inputUsername"  prefHeight="25.0" prefWidth="182.0" promptText="Username" />
-               <TextField fx:id="inputFirstName"  prefHeight="25.0" prefWidth="182.0" promptText="First Name" />
-               <TextField fx:id="inputLastName"  prefHeight="25.0" prefWidth="182.0" promptText="Last Name" />
-               <PasswordField fx:id="inputPasswd"  prefHeight="25.0" prefWidth="182.0" promptText="Password" />
+               <TextField fx:id="inputUsername" prefHeight="25.0" prefWidth="182.0" promptText="Username" />
+               <TextField fx:id="inputFirstName" prefHeight="25.0" prefWidth="182.0" promptText="First Name" />
+               <TextField fx:id="inputLastName" prefHeight="25.0" prefWidth="182.0" promptText="Last Name" />
+               <PasswordField fx:id="inputPasswd" prefHeight="25.0" prefWidth="182.0" promptText="Password" />
             </children>
          </VBox>
          <HBox spacing="20.0">
             <children>
-               <Button lineSpacing="10.0" mnemonicParsing="false" text="I'm a tea guy" />
-               <Button lineSpacing="1000.0" mnemonicParsing="false" text="Join Frappe" />
+               <Button fx:id="exitRegister" lineSpacing="10.0" mnemonicParsing="false" onAction="#abortRegister" text="I'm a tea guy" />
+               <Button fx:id="registerNetwork" lineSpacing="1000.0" mnemonicParsing="false" onAction="#joinNetwork" text="Join Frappe" />
             </children>
          </HBox>
       </children>
    </VBox>
-   <ImageView fx:id="imgFrappe" fitHeight="218.0" fitWidth="131.0" layoutX="30.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fx:id="imgFrappe" fitHeight="218.0" fitWidth="131.0" layoutX="34.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
       <image>
          <Image url="@../images/Frappe_stage_1.jpg" />
       </image>

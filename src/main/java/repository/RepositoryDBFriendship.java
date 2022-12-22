@@ -1,3 +1,4 @@
+/*
 package repository;
 
 import domain.Friendship;
@@ -137,3 +138,4 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
 
 
 }
+*/

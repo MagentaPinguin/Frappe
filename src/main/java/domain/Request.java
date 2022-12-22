@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import static anexe.Constants.FORMATTER;
 
-public class Request<ID extends UUID> extends Entity<ID>{
+public class Request<ID> extends Entity<ID>{
 
     private  ID sender;
     private  ID receiver;
@@ -46,11 +46,11 @@ public class Request<ID extends UUID> extends Entity<ID>{
         this.status = status.toUpperCase();
     }
 
-    public UUID getSender() {
+    public ID getSender() {
         return sender;
     }
 
-    public UUID getReceiver() {
+    public ID getReceiver() {
         return receiver;
     }
 

@@ -15,5 +15,8 @@ public class Constants {
                                         "graf-afiseaza detalii despre network\n";
 
 
+ /*   public static  String urlDb="jdbc:postgresql://localhost:5432/Frappe";
+    public static  String usernameDb="postgres";
+    public static  String passwdDb="postgres";*/
 
 }

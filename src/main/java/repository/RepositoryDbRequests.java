@@ -1,3 +1,4 @@
+/*
 package repository;
 
 
@@ -83,11 +84,11 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
             preparedStatement.setObject(1, Receiver);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Integer id = resultSet.getInt("id");
+                var id = resultSet.getInt("id");
                 UUID sender = resultSet.getObject("sender", UUID.class);
                 UUID receiver = resultSet.getObject("receiver", UUID.class);
                 String status= resultSet.getString("status");
-                Request<Integer> req = new Request<>(sender, receiver,status);
+                var req = new Request<>(sender, receiver,status);
                 req.setId(id);
                 req.setDate(resultSet.getTimestamp("data").toLocalDateTime());
                 requestList.add(req);
@@ -129,7 +130,7 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
             ResultSet resultSet= preparedStatement.executeQuery()){
             while(resultSet.next()){
 
-                Request<Integer> req=new Request<>(
+                var req=new Request<>(
                                             resultSet.getObject("sender", UUID.class),
                                             resultSet.getObject("receiver", UUID.class));
 
@@ -160,3 +161,4 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
         return dim;
     }
 }
+*/
