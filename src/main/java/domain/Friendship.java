@@ -11,8 +11,6 @@ public class Friendship<ID extends UUID> extends Entity<ID>{
     ID second;
     LocalDateTime data;
 
-
-
     public Friendship() {}
 
     public Friendship(ID first, ID second) {

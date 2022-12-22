@@ -10,7 +10,11 @@ public class Message<ID extends UUID> extends Entity<ID>{
     private String context;
 
     private LocalDateTime data;
-
+    public Message(ID sender, String context) {
+        this.sender = sender;
+        this.context = context;
+        this.data = LocalDateTime.now();
+    }
 
     public Message(ID sender, String context, LocalDateTime data) {
         this.sender = sender;

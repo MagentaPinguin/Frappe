@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="309.0" prefWidth="395.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.RegisterGui">
+   <VBox id="Input" fx:id="input" layoutX="182.0" layoutY="45.0" prefHeight="218.0" prefWidth="188.0" spacing="14.0">
+      <children>
+         <VBox spacing="10.0">
+            <children>
+               <TextField fx:id="inputUsername"  prefHeight="25.0" prefWidth="182.0" promptText="Username" />
+               <TextField fx:id="inputFirstName"  prefHeight="25.0" prefWidth="182.0" promptText="First Name" />
+               <TextField fx:id="inputLastName"  prefHeight="25.0" prefWidth="182.0" promptText="Last Name" />
+               <PasswordField fx:id="inputPasswd"  prefHeight="25.0" prefWidth="182.0" promptText="Password" />
+            </children>
+         </VBox>
+         <HBox spacing="20.0">
+            <children>
+               <Button lineSpacing="10.0" mnemonicParsing="false" text="I'm a tea guy" />
+               <Button lineSpacing="1000.0" mnemonicParsing="false" text="Join Frappe" />
+            </children>
+         </HBox>
+      </children>
+   </VBox>
+   <ImageView fx:id="imgFrappe" fitHeight="218.0" fitWidth="131.0" layoutX="30.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../images/Frappe_stage_1.jpg" />
+      </image>
+      <viewport>
+         <Rectangle2D />
+      </viewport></ImageView>
+</AnchorPane>

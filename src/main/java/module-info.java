@@ -1,4 +1,4 @@
-module application.frappe {
+module application{
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -8,4 +8,7 @@ module application.frappe {
 
     opens application to javafx.fxml;
     exports application;
+    exports application.controller;
+
+    opens application.controller to javafx.fxml;
 }
