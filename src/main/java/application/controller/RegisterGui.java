@@ -3,6 +3,7 @@ package application.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -36,9 +37,9 @@ public class RegisterGui {
     @FXML
     void initialize(){
 
-          inputUsername.textProperty().addListener(e->frappeEvolve());;
-          inputFirstName.textProperty().addListener(e->frappeEvolve());;
-          inputLastName.textProperty().addListener(e->frappeEvolve());;
+          inputUsername.textProperty().addListener(e->frappeEvolve());
+          inputFirstName.textProperty().addListener(e->frappeEvolve());
+          inputLastName.textProperty().addListener(e->frappeEvolve());
           inputPasswd.textProperty().addListener(e->frappeEvolve());
 
     }

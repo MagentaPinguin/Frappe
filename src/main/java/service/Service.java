@@ -1,15 +1,20 @@
 package service;
 
+import anexe.Observer;
+import anexe.Subject;
 import domain.User;
 import domain.validators.ValidationException;
 import domain.validators.ValidatorUser;
 import repository.RepositoryDBUsers;
 import repository.RepositoryException;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Service {
+public class Service implements Subject {
 
+    List<Observer> observersList=new ArrayList<>();
+    //" Obs list
     RepositoryDBUsers repositoryDBUsers=new RepositoryDBUsers("jdbc:postgresql://localhost:5432/Frappe","postgres","postgres");
     ValidatorUser validatorUser=new ValidatorUser();
     public Service(){}
@@ -23,8 +28,22 @@ public class Service {
             throw new ServiceException(e.getMessage());
 
         }
-
-
     }
 
+    @Override
+    public void register(Observer obj) {
+        observersList.add(obj);
+    }
+
+    @Override
+    public void unregister(Observer obj) {
+        observersList.remove(obj);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer x:observersList){
+            x.update();
+        }
+    }
 }
