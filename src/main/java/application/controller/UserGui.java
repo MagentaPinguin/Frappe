@@ -12,7 +12,7 @@ import javafx.scene.shape.Circle;
 import service.Service;
 import javafx.stage.Stage;
 
-public class UserGui {
+public class UserGui extends AbstractMethodError {
     public AnchorPane anchorPane;
     Service service;
 

@@ -6,14 +6,14 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="499.0" prefWidth="429.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.LoginGui">
+<AnchorPane prefHeight="499.0" prefWidth="303.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.LoginGui">
    <children>
-      <ImageView disable="true" fitHeight="489.0" fitWidth="486.0" layoutY="-1.0" pickOnBounds="true">
+      <ImageView disable="true" fitHeight="499.0" fitWidth="330.0" layoutX="5.0" pickOnBounds="true" preserveRatio="true" smooth="false">
          <image>
             <Image url="@../images/login_coffee.jpg" />
          </image></ImageView>
-      <TextField alignment="CENTER" layoutX="168.0" layoutY="244.0" promptText="USERNAME" />
-      <TextField alignment="CENTER" layoutX="168.0" layoutY="301.0" promptText="PASSWORD" />
-      <Button layoutX="208.0" layoutY="409.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Login" />
+      <TextField fx:id="txtFieldUsername" alignment="CENTER" layoutX="73.0" layoutY="237.0" promptText="USERNAME" />
+      <TextField fx:id="txtFieldPasswd" alignment="CENTER" layoutX="73.0" layoutY="281.0" promptText="PASSWORD" />
+      <Button fx:id="login" layoutX="113.0" layoutY="354.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Login" />
    </children>
 </AnchorPane>

@@ -12,5 +12,6 @@ module application{
     exports application.controller;
     exports service;
     exports domain;
+    exports anexe;
     opens application.controller to javafx.fxml;
 }

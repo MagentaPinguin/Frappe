@@ -7,6 +7,7 @@ import domain.validators.ValidatorUser;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -107,7 +108,7 @@ public class RepositoryDBUsers implements Repository<User> {
 
     }
 
-    public User findUsername(String username) {
+    public Optional<User> findUsername(String username) {
         User user = new User();
         String sql = "SELECT * from Users where Username=?";
 
@@ -124,12 +125,10 @@ public class RepositoryDBUsers implements Repository<User> {
             user.setLastName(resultSet.getString("lastname"));
 
         } catch (SQLException e) {
-            return null;
+            return Optional.empty();
 
         }
-
-
-        return user;
+        return Optional.of(user);
     }
 
     @Override

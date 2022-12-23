@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 
-public class RegisterGui {
+public class RegisterGui extends AbstractController {
 
 
     public Button registerNetwork;
@@ -86,19 +86,7 @@ public class RegisterGui {
             a.show();
 
         } catch (ServiceException e) {
-            Alert a= new Alert(Alert.AlertType.ERROR,e.getMessage(),new ButtonType("Okey...."));
-
-            Image img = new Image("images/error_coffee.png", 120, 120, true, true);
-
-            Stage stage = (Stage) a.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image("images/frappe_icon.png"));
-
-            a.setTitle("ERROR");
-            a.setGraphic( new ImageView(img));
-
-            a.show();
-
-
+            errorShow(e.getMessage());
         };
 
     }

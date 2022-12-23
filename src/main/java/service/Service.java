@@ -10,6 +10,7 @@ import repository.RepositoryException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Service implements Subject {
 
@@ -45,5 +46,13 @@ public class Service implements Subject {
         for(Observer x:observersList){
             x.update();
         }
+    }
+
+    public User getUserByUsername(String text) throws ServiceException {
+        var found= repositoryDBUsers.findUsername(text);
+        if(found.isEmpty())
+            throw new ServiceException("User not found!");
+        else
+            return found.get();
     }
 }
