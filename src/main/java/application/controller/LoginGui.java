@@ -3,6 +3,7 @@ package application.controller;
 import domain.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -14,6 +15,8 @@ import service.ServiceException;
 public class LoginGui extends AbstractController{
     public TextField txtFieldUsername;
     public TextField txtFieldPasswd;
+
+    public Button buttonLogin;
     Service service;
     User account;
 
@@ -30,16 +33,14 @@ public class LoginGui extends AbstractController{
             var found=service.getUserByUsername(txtFieldUsername.getText());
 
         } catch (ServiceException e) {
-
             errorShow(e.getMessage());
-
         }
-
     }
 
     public void setService(Service service) {
         this.service=service;
     }
+
     public void setAccount(User account) {
         this.account=account;
     }

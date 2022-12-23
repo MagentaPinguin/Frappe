@@ -17,9 +17,9 @@ public class Application extends javafx.application.Application {
         Service service=new Service();
         //" Service
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("user-gui.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("login-gui.fxml"));
         Scene scene = new Scene(fxmlLoader.load()) ;
-        UserGui ctrl=fxmlLoader.getController();
+        LoginGui ctrl=fxmlLoader.getController();
         ctrl.setService(service);
         stage.setTitle("FRAPPE");
         stage.setScene(scene);
