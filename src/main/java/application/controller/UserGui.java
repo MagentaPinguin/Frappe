@@ -1,26 +1,37 @@
 package application.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+
+import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import service.Service;
+import javafx.stage.Stage;
 
 public class UserGui {
+    public AnchorPane anchorPane;
     Service service;
-    public Button buttonAccount;
-    public Button buttonChat;
-    public Button buttonRequests;
-    public Button buttonFriends;
-    public Button buttonSettings;
-    //"Buttons
 
+    public Tab tabFriends;
+    public Tab tabChat;
+    public Tab tabRequest;
+    public Tab tabProfile;
+    //"Tabs
+
+    public Circle circlePicture;
+    //"Shape
 
     @FXML
-    void initialize(){
-        buttonAccount.setGraphic(new ImageView("images/account.png"));
-        buttonChat.setGraphic(new ImageView("images/chat.png"));
-        buttonFriends.setGraphic(new ImageView("images/friends.png"));
-        buttonRequests.setGraphic(new ImageView("images/request.png"));
+    void initialize() {
+        tabProfile.setGraphic(new ImageView("images/account.png"));
+        tabFriends.setGraphic(new ImageView("images/friends.png"));
+        tabRequest.setGraphic(new ImageView("images/request.png"));
+        tabChat.setGraphic(new ImageView("images/chat.png"));
+        circlePicture.setFill(new ImagePattern(new Image("images/Prf.jpg")));
     }
 
     public void setService(Service service) {

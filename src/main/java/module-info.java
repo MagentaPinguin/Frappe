@@ -10,6 +10,7 @@ module application{
     opens application to javafx.fxml;
     exports application;
     exports application.controller;
-
+    exports service;
+    exports domain;
     opens application.controller to javafx.fxml;
 }

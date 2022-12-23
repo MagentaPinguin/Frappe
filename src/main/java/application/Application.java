@@ -19,13 +19,14 @@ public class Application extends javafx.application.Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("user-gui.fxml"));
         Scene scene = new Scene(fxmlLoader.load()) ;
-
         UserGui ctrl=fxmlLoader.getController();
         ctrl.setService(service);
-
-        stage.getIcons().add(new Image("images/frappe_icon.png"));
         stage.setTitle("FRAPPE");
         stage.setScene(scene);
+
+        stage.getIcons().add(new Image("images/frappe_icon.png"));
+        stage.setResizable(false);
+
         stage.show();
     }
 
