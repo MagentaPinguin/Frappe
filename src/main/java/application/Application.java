@@ -1,6 +1,8 @@
 package application;
 
+import application.controller.LoginGui;
 import application.controller.RegisterGui;
+import application.controller.UserGui;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -15,14 +17,14 @@ public class Application extends javafx.application.Application {
         Service service=new Service();
         //" Service
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("register-gui.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("user-gui.fxml"));
         Scene scene = new Scene(fxmlLoader.load()) ;
 
-        RegisterGui ctrl=fxmlLoader.getController();
+        UserGui ctrl=fxmlLoader.getController();
         ctrl.setService(service);
 
-        stage.setTitle("FRAPPE");
         stage.getIcons().add(new Image("images/frappe_icon.png"));
+        stage.setTitle("FRAPPE");
         stage.setScene(scene);
         stage.show();
     }

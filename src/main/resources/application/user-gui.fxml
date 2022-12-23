@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.UserGui">
+   <children>
+      <SplitPane dividerPositions="0.17466517857142858" prefHeight="400.0" prefWidth="600.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="190.0">
+               <children>
+                  <Button fx:id="buttonAccount" alignment="CENTER" layoutX="25.0" layoutY="48.0" mnemonicParsing="false" text="Account" />
+                  <Button fx:id="buttonChat" alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="173.0" mnemonicParsing="false" text="Chat" />
+                  <Button fx:id="buttonFriends" alignment="CENTER" layoutX="26.0" layoutY="128.0" mnemonicParsing="false" text="Friends " />
+                  <Button fx:id="buttonRequests" alignment="CENTER" layoutX="23.0" layoutY="87.0" mnemonicParsing="false" text="Requests" />
+                  <Button fx:id="buttonSettings" alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="224.0" mnemonicParsing="false" text="Settings" visible="false" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="553.0" />
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
