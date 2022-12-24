@@ -55,4 +55,12 @@ public class Service implements Subject {
         else
             return found.get();
     }
+
+    public void update(User updated) throws RepositoryException {
+        try {
+            repositoryDBUsers.update(updated);
+        } catch (RepositoryException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
 }

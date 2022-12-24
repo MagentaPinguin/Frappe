@@ -50,7 +50,7 @@ public class RepositoryDBUsers implements Repository<User> {
     @Override
     public User update(User entity) throws RepositoryException {
 
-        String sql = "UPDATE  users set username=?,passwd=?,firstname=?,lastname=? where Id=?";
+        String sql = "UPDATE users SET username=?,passwd=?,firstname=?, lastname=? where users.id=?";
 
         try (Connection connection = DriverManager.getConnection(urlDb, usernameDb, passwdDb);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -62,7 +62,7 @@ public class RepositoryDBUsers implements Repository<User> {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RepositoryException(e.getMessage());
         }
         return entity;
     }
