@@ -1,4 +1,3 @@
-/*
 package repository;
 
 import domain.Friendship;
@@ -8,6 +7,7 @@ import repository.RepositoryException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
@@ -23,9 +23,9 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
 
     @Override
     public Friendship<UUID> add(Friendship<UUID> entity) throws RepositoryException {
-        if(find(entity)!=null)
+        if(find(entity).isPresent())
             throw new RepositoryException("Entity exists");
-        String sql="insert into friendships(first_user,second_user) values (?,?)";
+        String sql="insert into friendships(first,second) values (?,?)";
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
             PreparedStatement preparedStatement= connection.prepareStatement(sql)){
             preparedStatement.setObject(1, entity.getFirst());
@@ -33,7 +33,7 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
             preparedStatement.executeUpdate();
 
         }catch (SQLException e){
-            e.printStackTrace();
+            throw new RepositoryException(e.getMessage());
         }
         return entity;
     }
@@ -45,9 +45,9 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
 
     @Override
     public Friendship<UUID> delete(Friendship<UUID> entity) throws RepositoryException {
-        if(find(entity)==null)
+        if(find(entity).isEmpty())
             throw new RepositoryException("Nonexistent entity");
-        String sql="delete from friendships where( first_user in(?) and second_user in (?))";
+        String sql="delete from friendships where( first in(?) and second in (?))";
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
             PreparedStatement preparedStatement= connection.prepareStatement(sql)){
                 preparedStatement.setObject(1, entity.getFirst());
@@ -60,30 +60,30 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
     }
 
     @Override
-    public Friendship<UUID> find(Friendship<UUID> entity) {
+    public Optional<Friendship<UUID>> find(Friendship<UUID> entity) {
         Friendship<UUID> friendship=new Friendship<>();
 
-        String sql="SELECT * from friendships where( first_user in(?) and second_user in (?))";
+        String sql="SELECT * from friendships where( first in(?) and second in (?))";
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
             PreparedStatement preparedStatement= connection.prepareStatement(sql)){
             preparedStatement.setObject(1, entity.getFirst());
             preparedStatement.setObject(2,  entity.getSecond());
             ResultSet resultSet= preparedStatement.executeQuery();
             resultSet.next();
-            friendship.setFirst(resultSet.getObject("first_user",UUID.class));
-            friendship.setSecond(resultSet.getObject("second_user",UUID.class));
+            friendship.setFirst(resultSet.getObject("first",UUID.class));
+            friendship.setSecond(resultSet.getObject("second",UUID.class));
             friendship.setData(resultSet.getTimestamp("date").toLocalDateTime());
         }catch (SQLException e){
 
-            return null;
+            return Optional.empty();
         }
-        return friendship;
+        return Optional.of(friendship);
     }
 
     public List<Friendship<UUID>> getFriends( UUID user) {
         List<Friendship<UUID>> friendshipsSet= new ArrayList<>();
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
-            PreparedStatement preparedStatement= connection.prepareStatement("SELECT * FROM friendships where (first_user=? or second_user=?)")){
+            PreparedStatement preparedStatement= connection.prepareStatement("SELECT * FROM friendships where (first=? or second=?)")){
             preparedStatement.setObject(1, user);
             preparedStatement.setObject(2, user);
             ResultSet resultSet= preparedStatement.executeQuery();
@@ -138,4 +138,3 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
 
 
 }
-*/

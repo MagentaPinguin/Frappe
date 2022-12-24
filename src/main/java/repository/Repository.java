@@ -1,6 +1,7 @@
 package repository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Repository<E> {
 
@@ -10,10 +11,10 @@ public interface Repository<E> {
 
     E delete(E entity) throws RepositoryException;
 
-    E find(E entity);
+    Optional<E> find(E entity);
 
-    List<E> getAll();
+    List<E> getAll() throws RepositoryException;
 
-    int size();
+    int size() throws RepositoryException;
 }
 //" General repository interface

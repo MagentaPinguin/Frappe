@@ -4,51 +4,51 @@ import java.util.UUID;
 
 public class User extends Entity<UUID>{
     //# User private data
-    private String userName;
+    private String username;
     private String passwd;
 
     //# Pseudo public data
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
 
 
     public User(){};
 
-    public User(String userName, String passwd, String firstName, String lastName) {
-        this.userName = userName;
+    public User(String username, String passwd, String firstname, String lastname) {
+        this.username = username;
         this.passwd = passwd;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstname = firstname;
+        this.lastname = lastname;
     }
     public User( User another){
         this.id=another.id;
-        this.userName = another.userName;
+        this.username = another.username;
         this.passwd = another.passwd;
-        this.firstName = another.firstName;
-        this.lastName = another.lastName;
+        this.firstname = another.firstname;
+        this.lastname = another.lastname;
     }
 
     public User(String[] args) {
-        this.userName = args[1];
+        this.username = args[1];
         this.passwd = args[2];
-        this.firstName = args[3];
-        this.lastName = args[4];
+        this.firstname = args[3];
+        this.lastname = args[4];
         setId(UUID.fromString(args[0]));
     }
 
     @Override
     public String toString() {
-        return "Username: " + userName +
-                ", lastName: " + lastName + '\'' +
-                ", firstName: " + firstName+'.';
+        return "Username: " + username +
+                ", lastName: " + lastname + '\'' +
+                ", firstName: " + firstname +'.';
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPasswd() {
@@ -59,20 +59,20 @@ public class User extends Entity<UUID>{
         this.passwd = passwd;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     @Override
@@ -80,15 +80,15 @@ public class User extends Entity<UUID>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return userName.equals(user.userName) && passwd.equals(user.passwd) && firstName.equals(user.firstName) && lastName.equals(user.lastName);
+        return username.equals(user.username) && passwd.equals(user.passwd) && firstname.equals(user.firstname) && lastname.equals(user.lastname);
     }
 
     @Override
     public int hashCode() {
-        int result = userName.hashCode();
+        int result = username.hashCode();
         result = 31 * result + passwd.hashCode();
-        result = 31 * result + firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
+        result = 31 * result + firstname.hashCode();
+        result = 31 * result + lastname.hashCode();
         return result;
     }
 }

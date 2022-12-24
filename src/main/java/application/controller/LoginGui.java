@@ -3,6 +3,7 @@ package application.controller;
 import application.Application;
 
 import domain.User;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -38,8 +39,7 @@ public class LoginGui extends AbstractController{
             FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("user-gui.fxml"));
             Scene scene = new Scene(fxmlLoader.load()) ;
             UserGui ctrl=fxmlLoader.getController();
-            ctrl.setService(service);
-            ctrl.setUser(found);
+            ctrl.setUp(service,found);
 
             Stage stage=new Stage();
             stage.setTitle("FRAPPE");
@@ -51,6 +51,7 @@ public class LoginGui extends AbstractController{
 
 
         } catch (ServiceException | IOException e) {
+            e.printStackTrace();
             errorShow(e.getMessage());
         }
     }
@@ -61,5 +62,18 @@ public class LoginGui extends AbstractController{
 
     public void setAccount(User account) {
         this.account=account;
+    }
+
+    public void registerUser() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("register-gui.fxml"));
+        Scene scene = new Scene(fxmlLoader.load()) ;
+        RegisterGui ctrl=fxmlLoader.getController();
+        ctrl.setService(service);
+        Stage stage=new Stage();
+        stage.setTitle("FRAPPE");
+        stage.setScene(scene);
+        stage.getIcons().add(new Image("images/frappe_icon.png"));
+        stage.setResizable(false);
+        stage.show();
     }
 }

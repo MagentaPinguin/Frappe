@@ -1,18 +1,15 @@
-/*
 package repository;
 
 
 import domain.Request;
-import repository.Repository;
-import repository.RepositoryException;
-
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public class RepositoryDbRequests implements Repository<Request<Integer>> {
+public class RepositoryDbRequests implements Repository<Request<UUID>> {
     private final String urlDb;
     private final String usernameDb;
     private final String passwdDb;
@@ -24,9 +21,9 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
     }
 
     @Override
-    public Request<Integer> add(Request<Integer> entity) throws RepositoryException {
-
-        if(find(entity)!=null)
+    public Request<UUID> add(Request<UUID> entity) throws RepositoryException {
+        System.out.println(find(entity).isPresent());
+        if(find(entity).isPresent())
             throw new RepositoryException("Entity exists");
         String sql="insert into requests(sender,receiver,status) values(?,?,?)";
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
@@ -37,20 +34,20 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
             preparedStatement.executeUpdate();
 
         }catch (SQLException e){
-            e.printStackTrace();
+            throw new RepositoryException(e.getMessage());
         }
         return entity;
     }
 
     @Override
-    public Request<Integer> update(Request<Integer> entity) throws RepositoryException {
+    public Request<UUID> update(Request<UUID> entity) throws RepositoryException {
         String sql="UPDATE requests set status=?, data=?  where id=?";
 
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
             PreparedStatement preparedStatement= connection.prepareStatement(sql)){
             preparedStatement.setString(1, entity.getStatus());
             preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-            preparedStatement.setInt(3, entity.getId());
+            preparedStatement.setObject(3, entity.getId());
             preparedStatement.executeUpdate();
 
         }catch (SQLException e){
@@ -61,7 +58,7 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
 
 
     @Override
-    public Request<Integer> delete(Request<Integer> entity) throws RepositoryException {
+    public Request<UUID> delete(Request<UUID> entity) throws RepositoryException {
         if(find(entity)==null)
             throw new RepositoryException("Nonexistent entity");
         String sql="delete from requests where( sender=? and receiver=? and status='ACCEPTED')";
@@ -76,19 +73,19 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
         return entity;
     }
 
-    public List<Request<Integer>> findRequests(UUID Receiver) {
-        List<Request<Integer>> requestList = new ArrayList<>();
+    public List<Request<UUID>> findRequests(UUID Receiver) {
+        List<Request<UUID>> requestList = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(urlDb, usernameDb, passwdDb);
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM requests where receiver=?")){
             preparedStatement.setObject(1, Receiver);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                var id = resultSet.getInt("id");
+                var id = resultSet.getObject("id", UUID.class);
                 UUID sender = resultSet.getObject("sender", UUID.class);
                 UUID receiver = resultSet.getObject("receiver", UUID.class);
                 String status= resultSet.getString("status");
-                var req = new Request<>(sender, receiver,status);
+                var req = new Request<UUID>(sender, receiver,status);
                 req.setId(id);
                 req.setDate(resultSet.getTimestamp("data").toLocalDateTime());
                 requestList.add(req);
@@ -100,8 +97,8 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
         return requestList;
     }
     @Override
-    public Request<Integer> find(Request<Integer> entity) {
-        Request<Integer> req=new Request<>();
+    public Optional<Request<UUID>> find(Request<UUID> entity) {
+        Request<UUID> req=new Request<>();
         String sql="SELECT * from requests where( sender=? and receiver=? and status='PENDING' )";
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
             PreparedStatement preparedStatement= connection.prepareStatement(sql)){
@@ -110,21 +107,22 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
             ResultSet resultSet= preparedStatement.executeQuery();
             resultSet.next();
 
-            req.setId(resultSet.getInt("id"));
+            req.setId(resultSet.getObject("id", UUID.class));
             req.setSender(resultSet.getObject("sender",UUID.class));
             req.setReceiver(resultSet.getObject("receiver",UUID.class));
-            req.setDate(resultSet.getTimestamp("data").toLocalDateTime());
+            req.setDate(resultSet.getTimestamp("date").toLocalDateTime());
             req.setStatus(resultSet.getString("status"));
+            System.out.println(req);
         }catch (SQLException e){
-
-            return null;
+             e.printStackTrace();
+            return Optional.empty();
         }
-        return req;
+        return Optional.of(req);
     }
 
     @Override
-    public List<Request<Integer>> getAll() {
-        List<Request<Integer>> requestList= new ArrayList<>();
+    public List<Request<UUID>> getAll() {
+        List<Request<UUID>> requestList= new ArrayList<>();
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
             PreparedStatement preparedStatement= connection.prepareStatement("SELECT * FROM requests");
             ResultSet resultSet= preparedStatement.executeQuery()){
@@ -134,7 +132,7 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
                                             resultSet.getObject("sender", UUID.class),
                                             resultSet.getObject("receiver", UUID.class));
 
-                req.setId(resultSet.getInt("id"));
+                req.setId(resultSet.getObject("id", UUID.class));
                 req.setStatus(resultSet.getString("status"));
                 req.setDate(resultSet.getTimestamp("data").toLocalDateTime());
                 requestList.add(req);
@@ -161,4 +159,3 @@ public class RepositoryDbRequests implements Repository<Request<Integer>> {
         return dim;
     }
 }
-*/

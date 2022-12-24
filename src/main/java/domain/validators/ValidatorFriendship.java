@@ -1,14 +1,10 @@
 package domain.validators;
 
-import domain.Friendship;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
 
 public class ValidatorFriendship implements Validator {
-
-
 
     @Override
     public void validate(List<String> args) throws ValidationException {

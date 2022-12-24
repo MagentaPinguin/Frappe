@@ -1,8 +1,6 @@
 package application;
 
 import application.controller.LoginGui;
-import application.controller.RegisterGui;
-import application.controller.UserGui;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;

@@ -86,6 +86,7 @@ public class RegisterGui extends AbstractController {
             a.show();
 
         } catch (ServiceException e) {
+
             errorShow(e.getMessage());
         };
 

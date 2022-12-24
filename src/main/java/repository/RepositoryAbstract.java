@@ -11,7 +11,7 @@ public abstract class RepositoryAbstract<E extends Entity<?>> implements Reposit
     @Override
     public E add(E entity) throws RepositoryException {
         var aux = find(entity);
-        if (aux != null)
+        if (aux.isPresent())
             throw new RepositoryException("Existent entity");
         repository.add(entity);
         return entity;
@@ -22,9 +22,9 @@ public abstract class RepositoryAbstract<E extends Entity<?>> implements Reposit
     @Override
     public E delete(E entity) throws RepositoryException {
         var aux = find(entity);
-        if (aux == null)
+        if (aux.isEmpty())
             throw new RepositoryException("Nonexistent entity");
-        repository.remove(aux);
+        repository.remove(aux.get());
         return entity;
     }
     @Override
