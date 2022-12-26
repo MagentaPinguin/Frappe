@@ -3,11 +3,9 @@ package application.controller;
 import domain.Friendship;
 import domain.Request;
 import domain.User;
-import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.scene.Group;
@@ -160,7 +158,7 @@ public class UserGui extends AbstractController {
         tabFriends.setGraphic(new ImageView("images/friends.png"));
         tabRequest.setGraphic(new ImageView("images/request.png"));
         tabChat.setGraphic(new ImageView("images/chat.png"));
-        circlePicture.setFill(new ImagePattern(new Image("images/Prf.jpg")));
+
 
         colUsernameNetwork.setCellValueFactory(new PropertyValueFactory<>("username"));
         colFirstnameNetwork.setCellValueFactory(new PropertyValueFactory<>("firstname"));
@@ -206,6 +204,8 @@ public class UserGui extends AbstractController {
         textFieldUsername.setText(account.getUsername());
         textFieldFirstname.setText(account.getFirstname());
         textFieldLastName.setText(account.getLastname());
+        System.out.println(account);
+        circlePicture.setFill(new ImagePattern(new Image(account.getPictureReference())));
     }
 
     public void setUser(User user) {

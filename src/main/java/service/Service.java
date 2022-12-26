@@ -15,7 +15,7 @@ import repository.RepositoryException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.UUID;
 
 
@@ -35,7 +35,10 @@ public class Service implements Subject {
     public void addUser(List<String> arg) throws ServiceException {
         try {
             validatorUser.validate(arg);
-            repositoryDBUsers.add(new User(arg.get(0),arg.get(1),arg.get(2),arg.get(3)));
+            var aux=new User(arg.get(0),arg.get(1),arg.get(2),arg.get(3));
+            System.out.println(arg.get(4));
+            aux.setPictureReference(arg.get(4));
+            repositoryDBUsers.add(aux);
 
         }catch (RepositoryException | ValidationException e){
             throw new ServiceException(e.getMessage());

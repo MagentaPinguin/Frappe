@@ -11,6 +11,17 @@ public class User extends Entity<UUID>{
     private String firstname;
     private String lastname;
 
+    private String pictureReference;
+    
+    public String getPictureReference() {
+        return pictureReference;
+    }
+
+    public void setPictureReference(String pictureReference) {
+        this.pictureReference = pictureReference;
+    }
+    
+
 
     public User(){};
 
@@ -19,6 +30,7 @@ public class User extends Entity<UUID>{
         this.passwd = passwd;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.pictureReference ="";
     }
     public User( User another){
         this.id=another.id;
@@ -26,6 +38,7 @@ public class User extends Entity<UUID>{
         this.passwd = another.passwd;
         this.firstname = another.firstname;
         this.lastname = another.lastname;
+        this.pictureReference =another.pictureReference;
     }
 
 
@@ -33,7 +46,7 @@ public class User extends Entity<UUID>{
     public String toString() {
         return "Username: " + username +
                 ", lastName: " + lastname + '\'' +
-                ", firstName: " + firstname +'.';
+                ", firstName: " + firstname +" "+ pictureReference+'.';
     }
 
     public String getUsername() {

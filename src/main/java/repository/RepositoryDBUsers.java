@@ -26,7 +26,7 @@ public class RepositoryDBUsers implements Repository<User> {
 
         if (findUsername(entity.getUsername()).isPresent())
             throw new RepositoryException("Entity exists!");
-        String sql = "insert into users(username,passwd,firstname,lastname) values (?,?,?,?)";
+        String sql = "insert into users(username,passwd,firstname,lastname,picturepath) values (?,?,?,?,?)";
         try(Connection connection = DriverManager.getConnection(urlDb, usernameDb, passwdDb);
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
 
@@ -34,6 +34,7 @@ public class RepositoryDBUsers implements Repository<User> {
             preparedStatement.setString(2, entity.getPasswd());
             preparedStatement.setString(3, entity.getFirstname());
             preparedStatement.setString(4, entity.getLastname());
+            preparedStatement.setString(5, entity.getPictureReference());
             preparedStatement.executeUpdate();
 
 
@@ -67,7 +68,7 @@ public class RepositoryDBUsers implements Repository<User> {
 
     @Override
     public User delete(User entity) throws RepositoryException {
-        if (find(entity) == null)
+        if (find(entity).isEmpty())
             throw new RepositoryException("Nonexistent entity");
 
         String sql = "delete from Users where Id=?";
@@ -98,6 +99,7 @@ public class RepositoryDBUsers implements Repository<User> {
             user.setPasswd(resultSet.getString("passwd"));
             user.setFirstname(resultSet.getString("firstname"));
             user.setLastname(resultSet.getString("lastname"));
+            user.setPictureReference(resultSet.getString("picturepath"));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -121,6 +123,7 @@ public class RepositoryDBUsers implements Repository<User> {
             user.setPasswd(resultSet.getString("passwd"));
             user.setFirstname(resultSet.getString("firstname"));
             user.setLastname(resultSet.getString("lastname"));
+            user.setPictureReference(resultSet.getString("picturepath"));
 
         } catch (SQLException e) {
             return Optional.empty();
@@ -142,6 +145,7 @@ public class RepositoryDBUsers implements Repository<User> {
                 String lastName = resultSet.getString("lastname");
                 User user = new User(userName, passwd, firstName, lastName);
                 user.setId(resultSet.getObject("id", UUID.class));
+                user.setPictureReference(resultSet.getString("picturePath"));
                 usersSet.add(user);
             }
 
