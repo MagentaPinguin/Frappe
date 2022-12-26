@@ -85,9 +85,9 @@
                      <children>
                         <TableView fx:id="tableNetwork" layoutX="14.0" layoutY="25.0" prefHeight="292.0" prefWidth="226.0">
                           <columns>
-                            <TableColumn fx:id="colUsername" prefWidth="75.0" text="Username" />
-                            <TableColumn fx:id="colFirstname" prefWidth="75.0" text="Firstname" />
-                              <TableColumn fx:id="colLastname" prefWidth="75.0" text="Lastname" />
+                            <TableColumn fx:id="colUsernameNetwork" prefWidth="75.0" text="Username" />
+                            <TableColumn fx:id="colFirstnameNetwork" prefWidth="75.0" text="Firstname" />
+                              <TableColumn fx:id="colLastnameNetwork" prefWidth="75.0" text="Lastname" />
                           </columns>
                         </TableView>
                         <TextField fx:id="searchbar" layoutX="260.0" layoutY="25.0" prefHeight="28.0" prefWidth="168.0" promptText="Search" />
@@ -100,14 +100,14 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="tableFriends" layoutX="14.0" layoutY="17.0" prefHeight="311.0" prefWidth="243.0">
+                        <TableView fx:id="tableFriends" layoutX="14.0" layoutY="17.0" prefHeight="311.0" prefWidth="272.0">
                           <columns>
-                            <TableColumn prefWidth="84.0" text="Firstname" />
-                            <TableColumn prefWidth="84.00000762939453" text="Lastname" />
-                              <TableColumn prefWidth="75.0" text="Date" />
+                            <TableColumn fx:id="colFirstnameFriends" prefWidth="70.0" text="Firstname" />
+                            <TableColumn fx:id="colLastnameFriends" prefWidth="66.0" text="Lastname" />
+                              <TableColumn fx:id="colDateFriends" prefWidth="134.0" text="Date" />
                           </columns>
                         </TableView>
-                        <Button fx:id="deleteFriend" layoutX="305.0" layoutY="158.0" mnemonicParsing="false" text="Delete friend" />
+                        <Button fx:id="buttonDeleteFriend" layoutX="321.0" layoutY="48.0" mnemonicParsing="false" onAction="#deleteFriend" text="Delete friend" />
                      </children>
                   </AnchorPane>
                </content></Tab>
@@ -117,8 +117,8 @@
                      <children>
                         <TableView fx:id="tableRequests" layoutX="227.0" layoutY="23.0" prefHeight="295.0" prefWidth="214.0">
                           <columns>
-                            <TableColumn prefWidth="110.0" text="From" />
-                            <TableColumn prefWidth="103.33331298828125" text="Data" />
+                            <TableColumn fx:id="colRequestUsername" prefWidth="110.0" text="From" />
+                            <TableColumn fx:id="colRequestDate" prefWidth="103.33331298828125" text="Data" />
                           </columns>
                         </TableView>
                         <Button fx:id="buttonAcceptRequest" layoutX="77.0" layoutY="128.0" mnemonicParsing="false" onAction="#acceptRequest" text="Accept request" />

@@ -28,13 +28,6 @@ public class User extends Entity<UUID>{
         this.lastname = another.lastname;
     }
 
-    public User(String[] args) {
-        this.username = args[1];
-        this.passwd = args[2];
-        this.firstname = args[3];
-        this.lastname = args[4];
-        setId(UUID.fromString(args[0]));
-    }
 
     @Override
     public String toString() {

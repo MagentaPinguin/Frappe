@@ -1,8 +1,6 @@
 package repository;
 
 import domain.Friendship;
-import repository.Repository;
-import repository.RepositoryException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -54,7 +52,7 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
                 preparedStatement.setObject(2, entity.getSecond());
                 preparedStatement.executeUpdate();
         }catch (SQLException e){
-            e.printStackTrace();
+            throw new RepositoryException(e);
         }
         return entity;
     }
@@ -72,7 +70,7 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
             resultSet.next();
             friendship.setFirst(resultSet.getObject("first",UUID.class));
             friendship.setSecond(resultSet.getObject("second",UUID.class));
-            friendship.setData(resultSet.getTimestamp("date").toLocalDateTime());
+            friendship.setDate(resultSet.getTimestamp("date").toLocalDateTime());
         }catch (SQLException e){
 
             return Optional.empty();
@@ -80,7 +78,7 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
         return Optional.of(friendship);
     }
 
-    public List<Friendship<UUID>> getFriends( UUID user) {
+    public List<Friendship<UUID>> getFriends( UUID user) throws RepositoryException {
         List<Friendship<UUID>> friendshipsSet= new ArrayList<>();
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
             PreparedStatement preparedStatement= connection.prepareStatement("SELECT * FROM friendships where (first=? or second=?)")){
@@ -88,17 +86,17 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
             preparedStatement.setObject(2, user);
             ResultSet resultSet= preparedStatement.executeQuery();
             while(resultSet.next()){
-                UUID user1=resultSet.getObject("first_user", UUID.class);
-                UUID user2=resultSet.getObject("second_user", UUID.class);
+                UUID user1=resultSet.getObject("first", UUID.class);
+                UUID user2=resultSet.getObject("second", UUID.class);
                 Friendship<UUID> friendship=new Friendship<>(user1,user2);
-                friendship.setData(resultSet.getTimestamp("date").toLocalDateTime());
+                friendship.setDate(resultSet.getTimestamp("date").toLocalDateTime());
                 friendshipsSet.add(friendship);
             }
-
+            return friendshipsSet;
         }catch(SQLException e){
-            e.printStackTrace();
+            throw new RepositoryException(e.getMessage());
         }
-        return friendshipsSet;
+
     }
 
     @Override
@@ -111,7 +109,7 @@ public class RepositoryDBFriendship implements Repository<Friendship<UUID>> {
                 UUID user1=resultSet.getObject("first_user", UUID.class);
                 UUID user2=resultSet.getObject("second_user", UUID.class);
                 Friendship<UUID> friendship=new Friendship<>(user1,user2);
-                friendship.setData(resultSet.getTimestamp("date").toLocalDateTime());
+                friendship.setDate(resultSet.getTimestamp("date").toLocalDateTime());
                 friendshipsSet.add(friendship);
             }
 

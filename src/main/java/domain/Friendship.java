@@ -9,7 +9,7 @@ public class Friendship<ID extends UUID> extends Entity<ID>{
 
     ID first;
     ID second;
-    LocalDateTime data;
+    LocalDateTime date;
 
     public Friendship() {}
 
@@ -25,7 +25,7 @@ public class Friendship<ID extends UUID> extends Entity<ID>{
             this.first = second;
         }
 
-        data= LocalDateTime.now();
+        date = LocalDateTime.now();
     }
 
     public ID getFirst() {
@@ -44,18 +44,18 @@ public class Friendship<ID extends UUID> extends Entity<ID>{
          second=id;
     }
 
-    public void  setData( LocalDateTime date) {
-        this.data=date;
+    public void setDate(LocalDateTime date) {
+        this.date =date;
     }
 
 
     @Override
     public String toString() {
-        return "Friendship: " + first +" " + second+" from:"+getData().format(FORMATTER);
+        return "Friendship: " + first +" " + second+" from:"+ getDate().format(FORMATTER);
     }
 
-    public LocalDateTime getData() {
-        return data;
+    public LocalDateTime getDate() {
+        return date;
     }
 
 
