@@ -9,14 +9,16 @@ public class Chatroom<ID extends UUID> extends Entity<ID> {
 
     private String passwd;
 
-    private boolean type;
+    private int type;
 
-    private List<Entity<ID>> participants;
+    private List<ID> participants;
+    public Chatroom(){
 
-    public Chatroom(boolean type, String name, String passwd) {
+    }
+    public Chatroom( String name,int type) {
         this.type = type;
         this.name = name;
-        this.passwd = passwd;
+        passwd="";
         participants=new ArrayList<>();
     }
 
@@ -31,26 +33,47 @@ public class Chatroom<ID extends UUID> extends Entity<ID> {
         return name.equals(chatroom.name);
     }
 
-    @Override
-    public int hashCode() {
-        int result = (type ? 1 : 0);
-        result = 31 * result + name.hashCode();
-        return result;
-    }
-
-    public boolean isType() {
-        return type;
-    }
-
-    public void setType(boolean type) {
-        this.type = type;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-        name = name;
+        this.name = name;
+    }
+
+    public String getPasswd() {
+        return passwd;
+    }
+
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public List<ID> getParticipants() {
+        return participants;
+    }
+
+    public boolean isMember( ID id){
+        return participants.contains(id);
+    }
+    public void setParticipants(List<ID> participants) {
+        this.participants = participants;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName() != null ? getName().hashCode() : 0;
+        result = 31 * result + (getPasswd() != null ? getPasswd().hashCode() : 0);
+        result = 31 * result + getType();
+        result = 31 * result + (getParticipants() != null ? getParticipants().hashCode() : 0);
+        return result;
     }
 }

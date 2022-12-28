@@ -2,16 +2,12 @@ package service;
 
 import anexe.Observer;
 import anexe.Subject;
+import domain.Chatroom;
 import domain.Friendship;
 import domain.Request;
 import domain.User;
-import domain.validators.ValidationException;
-import domain.validators.ValidatorFriendship;
-import domain.validators.ValidatorUser;
-import repository.RepositoryDBFriendship;
-import repository.RepositoryDBUsers;
-import repository.RepositoryDbRequests;
-import repository.RepositoryException;
+import domain.validators.*;
+import repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,17 +22,19 @@ public class Service implements Subject {
     RepositoryDBUsers repositoryDBUsers=new RepositoryDBUsers("jdbc:postgresql://localhost:5432/Frappe","postgres","postgres");
     RepositoryDBFriendship repositoryDBFriendship=new RepositoryDBFriendship("jdbc:postgresql://localhost:5432/Frappe","postgres","postgres");
     RepositoryDbRequests repositoryDbRequests=new RepositoryDbRequests("jdbc:postgresql://localhost:5432/Frappe","postgres","postgres");
+    RepositoryDBChatroom repositoryDBChatroom=new RepositoryDBChatroom("jdbc:postgresql://localhost:5432/Frappe","postgres","postgres");
 
 
     ValidatorUser validatorUser=new ValidatorUser();
     ValidatorFriendship validatorFriendship=new ValidatorFriendship();
+    ValidatorChatroom validatorChatroom=new ValidatorChatroom();
+
     public Service(){}
 
     public void addUser(List<String> arg) throws ServiceException {
         try {
             validatorUser.validate(arg);
             var aux=new User(arg.get(0),arg.get(1),arg.get(2),arg.get(3));
-            System.out.println(arg.get(4));
             aux.setPictureReference(arg.get(4));
             repositoryDBUsers.add(aux);
 
@@ -68,6 +66,23 @@ public class Service implements Subject {
         }
 
     }
+    public void createChatRoom(List<String> arg,User owner) throws ServiceException {
+        try {
+            validatorChatroom.validate(arg);
+            int type=Integer.parseInt(arg.get(1));
+            var aux=new Chatroom<UUID>(arg.get(0),Integer.parseInt(arg.get(1)));
+            if(type==1)
+                aux.setPasswd(arg.get(2));
+            repositoryDBChatroom.add(aux);
+            var success=repositoryDBChatroom.find(aux);
+            repositoryDBChatroom.joinChatroom(success.get().getId(),owner.getId());
+        }catch (RepositoryException | ValidationException e){
+            throw new ServiceException(e.getMessage());
+
+        }
+    }
+
+
 
     public User getUserByUsername(String text) throws ServiceException {
         var found= repositoryDBUsers.findUsername(text);
@@ -180,11 +195,30 @@ public class Service implements Subject {
             if(requestFound.getId()==null)
                 requestFound = getRequest(friend, owner);
             repositoryDBFriendship.delete(friendshipFound);
-            System.out.println(requestFound);
             repositoryDbRequests.delete(requestFound);
             } catch (ServiceException | RepositoryException e) {
             throw new ServiceException(e.getMessage());
         }
 
+    }
+
+    public List<Chatroom<UUID>> getAllChatroom() throws ServiceException {
+        try {
+            return repositoryDBChatroom.getAll();
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public void addMemberToChat(Chatroom<UUID> selected, User account) throws ServiceException {
+        if(selected.isMember(account.getId())) {
+            throw new ServiceException("Already member");
+        }
+        try {
+
+            repositoryDBChatroom.joinChatroom(selected.getId(),account.getId());
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 }

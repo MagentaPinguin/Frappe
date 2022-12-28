@@ -1,27 +1,38 @@
 package application.controller;
 
+import application.Application;
+import domain.Chatroom;
 import domain.Friendship;
 import domain.Request;
 import domain.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
+import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.controlsfx.control.spreadsheet.Grid;
 import service.Service;
 import service.ServiceException;
 
+import java.io.IOException;
+import java.net.PasswordAuthentication;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +44,8 @@ import static anexe.Constants.FORMATTER;
 
 public class UserGui extends AbstractController {
 
+    public AnchorPane paneChatBackground;
+    //"Pannels
     public TextField textFieldUsername;
     public TextField textFieldFirstname;
     public TextField textFieldLastName;
@@ -64,6 +77,10 @@ public class UserGui extends AbstractController {
     public Button buttonAcceptRequest;
     public Button buttonDenyRequest;
     public Button buttonDeleteFriend;
+    public Button buttonChatCreate;
+    public Button buttonOpenChat;
+
+    public Button buttonJoinChat;
     //"Buttons
 
     public Group groupUpdate;
@@ -84,12 +101,21 @@ public class UserGui extends AbstractController {
     //"Table request
 
     public TableView<Pair<User, LocalDateTime>> tableFriends;
-
     public TableColumn<Pair<User, LocalDateTime>, String> colDateFriends;
     public TableColumn<Pair<User, LocalDateTime>, String> colLastnameFriends;
     public TableColumn<Pair<User, LocalDateTime>, String> colFirstnameFriends;
     ObservableList<Pair<User, LocalDateTime>> friendsModel = FXCollections.observableArrayList();
     //"Table friends
+
+
+
+
+    public TableColumn<Chatroom<UUID>,String> columnChatroomMember;
+    public TableView<Chatroom<UUID>> tableChatroom;
+    public TableColumn<Chatroom<UUID>,String> columnChatroomName;
+    public TableColumn<Chatroom<UUID>,String> columnChatroomType;
+    ObservableList<Chatroom<UUID>> chatroomModel = FXCollections.observableArrayList();
+    //"Table chatroom
 
 
     protected void populateUsers() {
@@ -143,7 +169,6 @@ public class UserGui extends AbstractController {
             errorShow(e.getMessage());
             return;
         }
-
         var friends = list.stream()
                 .map(e ->
                         new Pair<>((e.getFirst().equals(account.getId())) ?
@@ -151,9 +176,24 @@ public class UserGui extends AbstractController {
                                 e.getDate())).toList();
         friendsModel.setAll(friends);
     }
+    protected void populateChatrooms() {
+
+        List<Chatroom<UUID>> list = null;
+        try {
+            list = service.getAllChatroom();
+        } catch (ServiceException e) {
+            errorShow(e.getMessage());
+            return;
+        }
+        chatroomModel.setAll(list);
+
+    }
+
+
 
     @FXML
     void initialize() {
+        paneChatBackground.setVisible(false);
         tabProfile.setGraphic(new ImageView("images/account.png"));
         tabFriends.setGraphic(new ImageView("images/friends.png"));
         tabRequest.setGraphic(new ImageView("images/request.png"));
@@ -177,6 +217,13 @@ public class UserGui extends AbstractController {
         tableFriends.setItems(friendsModel);
         //Table friends
 
+        columnChatroomName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        columnChatroomType.setCellValueFactory(e-> (e.getValue().getType()==0)? new SimpleStringProperty("Public"):new SimpleStringProperty("Private"));
+        columnChatroomMember.setCellValueFactory(e->(e.getValue().getParticipants().contains(account.getId()))?new SimpleStringProperty("Yes"):new SimpleStringProperty("No") );
+        tableChatroom.setItems(chatroomModel);
+        //Table chatrooms
+
+
         searchbar.textProperty().addListener(e -> populateUsers());
 
         inputPasswd.setVisible(false);
@@ -192,6 +239,7 @@ public class UserGui extends AbstractController {
         populateUsers();
         populateFriends();
         populateRequests();
+        populateChatrooms();
 
     }
 
@@ -204,7 +252,6 @@ public class UserGui extends AbstractController {
         textFieldUsername.setText(account.getUsername());
         textFieldFirstname.setText(account.getFirstname());
         textFieldLastName.setText(account.getLastname());
-        System.out.println(account);
         circlePicture.setFill(new ImagePattern(new Image(account.getPictureReference())));
     }
 
@@ -332,11 +379,77 @@ public class UserGui extends AbstractController {
             populateFriends();
             populateRequests();
             populateUsers();
-            errorShow("You and"+friend.getUsername()+" are no longer friends now");
+            errorShow("You and "+friend.getUsername()+" are no longer friends now");
 
         } catch (ServiceException e) {
             errorShow(e.getMessage());
         }
 
     }
+
+    public void closeChatPane(MouseEvent mouseEvent) {
+        paneChatBackground.setVisible(false);
+        
+    }
+
+    public void openSelectedChat()
+    {
+        paneChatBackground.setVisible(true);
+    }
+
+
+    public void createChat() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("create-chat-gui.fxml"));
+        Scene scene = new Scene(fxmlLoader.load()) ;
+        CreateChatGui ctrl=fxmlLoader.getController();
+        ctrl.setUp(service,account);
+        Stage stage=new Stage();
+        stage.setTitle("FRAPPE");
+        stage.setScene(scene);
+        stage.getIcons().add(new Image("images/frappe_icon.png"));
+        stage.setResizable(false);
+
+        stage.show();
+
+
+    }
+
+    public void joinChatroom(ActionEvent actionEvent){
+
+        var selected= tableChatroom.getSelectionModel().getSelectedItem();
+        if(selected==null) {
+            errorShow("Select a chatroom to join!");
+            return;
+        }
+        if(selected.getType()==1){
+
+
+            GridPane grid = new GridPane();
+            PasswordField inputChatPassw=new PasswordField();
+            Button buttonJoin=new Button();
+            grid.add(inputChatPassw,1,1);
+
+
+            TextInputDialog passwd=new TextInputDialog();
+            passwd.setTitle("Enter Chatroom password");
+            var entered=passwd.showAndWait();
+
+            if(!selected.getPasswd().equals(entered.get())){
+                errorShow("Incorrect password");
+                return;
+            }
+        }
+
+        try {
+            service.addMemberToChat(selected,account);
+            condirmationShow("You was accepted to "+selected.getName());
+            populateChatrooms();
+        } catch (ServiceException e) {
+            errorShow(e.getMessage());
+        }
+
+
+    }
+
+
 }

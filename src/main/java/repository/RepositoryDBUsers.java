@@ -39,7 +39,6 @@ public class RepositoryDBUsers implements Repository<User> {
 
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             throw  new RepositoryException(e.getMessage());
         }
         return entity;
