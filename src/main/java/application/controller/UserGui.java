@@ -1,10 +1,8 @@
 package application.controller;
 
+import anexe.Observer;
 import application.Application;
-import domain.Chatroom;
-import domain.Friendship;
-import domain.Request;
-import domain.User;
+import domain.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.AccessibleRole;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -28,36 +27,51 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.controlsfx.control.spreadsheet.Grid;
+import repository.RepositoryException;
 import service.Service;
 import service.ServiceException;
 
 import java.io.IOException;
 import java.net.PasswordAuthentication;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 import static anexe.Constants.FORMATTER;
 
 
-public class UserGui extends AbstractController {
+public class UserGui extends AbstractController implements Observer {
+
+
+
+    private Chatroom<UUID> openedChatroom;
+    private Service service;
+    private User account;
+    //" Account data
 
     public AnchorPane paneChatBackground;
+    public AnchorPane anchorPane;
+
+    public TextArea areaMessages;
+    //"Layout
+
     //"Pannels
+
     public TextField textFieldUsername;
     public TextField textFieldFirstname;
     public TextField textFieldLastName;
     //! User data
     public PasswordField inputPasswd;
+
+    public TextField fieldInputMessage;
     public TextField searchbar;
     //"Fields
 
-    private Service service;
-    private User account;
-    public AnchorPane anchorPane;
-    //"Layout
 
     public Tab tabFriends;
     public Tab tabChat;
@@ -70,6 +84,8 @@ public class UserGui extends AbstractController {
     //"Shape
 
 
+
+    public Button buttonSendMessage;
     public Button buttonSaveModify;
     public Button buttonCancel;
     public Button buttonModify;
@@ -107,9 +123,6 @@ public class UserGui extends AbstractController {
     ObservableList<Pair<User, LocalDateTime>> friendsModel = FXCollections.observableArrayList();
     //"Table friends
 
-
-
-
     public TableColumn<Chatroom<UUID>,String> columnChatroomMember;
     public TableView<Chatroom<UUID>> tableChatroom;
     public TableColumn<Chatroom<UUID>,String> columnChatroomName;
@@ -117,8 +130,7 @@ public class UserGui extends AbstractController {
     ObservableList<Chatroom<UUID>> chatroomModel = FXCollections.observableArrayList();
     //"Table chatroom
 
-
-    protected void populateUsers() {
+    private void populateUsers() {
         List<User> list = null;
         try {
             list = service.getUsers();
@@ -146,7 +158,7 @@ public class UserGui extends AbstractController {
         usersModel.setAll(users);
     }
 
-    protected void populateRequests() {
+    private void populateRequests() {
         List<Request<UUID>> list = null;
         try {
             list = service.getRequestsFor(account);
@@ -161,7 +173,7 @@ public class UserGui extends AbstractController {
         requestModel.setAll(requests);
     }
 
-    protected void populateFriends() {
+    private void populateFriends() {
         List<Friendship<UUID>> list = null;
         try {
             list = service.getFriendsFor(account);
@@ -176,7 +188,7 @@ public class UserGui extends AbstractController {
                                 e.getDate())).toList();
         friendsModel.setAll(friends);
     }
-    protected void populateChatrooms() {
+    private void populateChatrooms() {
 
         List<Chatroom<UUID>> list = null;
         try {
@@ -188,8 +200,6 @@ public class UserGui extends AbstractController {
         chatroomModel.setAll(list);
 
     }
-
-
 
     @FXML
     void initialize() {
@@ -222,7 +232,8 @@ public class UserGui extends AbstractController {
         columnChatroomMember.setCellValueFactory(e->(e.getValue().getParticipants().contains(account.getId()))?new SimpleStringProperty("Yes"):new SimpleStringProperty("No") );
         tableChatroom.setItems(chatroomModel);
         //Table chatrooms
-
+        areaMessages.setEditable(false);
+        //MessageArea
 
         searchbar.textProperty().addListener(e -> populateUsers());
 
@@ -245,6 +256,7 @@ public class UserGui extends AbstractController {
 
     public void setService(Service service) {
         this.service = service;
+        this.service.register(this);
 
     }
 
@@ -392,10 +404,35 @@ public class UserGui extends AbstractController {
         
     }
 
+    private void populateWithMessages() {
+
+
+
+        try {
+
+         var messages = service.getAllMessagesFor(openedChatroom);
+         messages.sort(Comparator.comparing(Message::getData));
+         var finale =messages.stream().map(e->e.getContext()+" |"+service.getUserById(e.getSender()).getUsername()+"\n").collect(Collectors.joining());
+         areaMessages.setText(finale);
+
+        } catch (ServiceException e) {
+            errorShow(e.getMessage());
+        }
+
+    }
+
     public void openSelectedChat()
     {
+        openedChatroom=tableChatroom.getSelectionModel().getSelectedItem();
+        if(openedChatroom==null){
+            errorShow("Select a chatroom!");
+            return;
+        };
+        populateWithMessages();
         paneChatBackground.setVisible(true);
     }
+
+
 
 
     public void createChat() throws IOException {
@@ -408,30 +445,19 @@ public class UserGui extends AbstractController {
         stage.setScene(scene);
         stage.getIcons().add(new Image("images/frappe_icon.png"));
         stage.setResizable(false);
-
         stage.show();
-
-
     }
 
     public void joinChatroom(ActionEvent actionEvent){
-
         var selected= tableChatroom.getSelectionModel().getSelectedItem();
         if(selected==null) {
             errorShow("Select a chatroom to join!");
             return;
         }
         if(selected.getType()==1){
-
-
-            GridPane grid = new GridPane();
-            PasswordField inputChatPassw=new PasswordField();
-            Button buttonJoin=new Button();
-            grid.add(inputChatPassw,1,1);
-
-
             TextInputDialog passwd=new TextInputDialog();
             passwd.setTitle("Enter Chatroom password");
+            passwd.setGraphic(new ImageView(new Image("images/img_lock.jpg")));
             var entered=passwd.showAndWait();
 
             if(!selected.getPasswd().equals(entered.get())){
@@ -452,4 +478,26 @@ public class UserGui extends AbstractController {
     }
 
 
+    public void addMessage() {
+
+        var message=fieldInputMessage.getText();
+        try {
+            service.addMessage(openedChatroom.getId(),account.getId(),message);
+            populateWithMessages();
+        } catch (ServiceException e) {
+           errorShow(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void update() {
+        if(openedChatroom!=null)
+            populateWithMessages();
+        populateChatrooms();
+        populateRequests();
+        populateUsers();
+        populateFriends();
+
+    }
 }

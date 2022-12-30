@@ -2,10 +2,7 @@ package service;
 
 import anexe.Observer;
 import anexe.Subject;
-import domain.Chatroom;
-import domain.Friendship;
-import domain.Request;
-import domain.User;
+import domain.*;
 import domain.validators.*;
 import repository.*;
 
@@ -217,6 +214,24 @@ public class Service implements Subject {
         try {
 
             repositoryDBChatroom.joinChatroom(selected.getId(),account.getId());
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Message<UUID>> getAllMessagesFor(Chatroom<UUID> openedChatroom) throws ServiceException {
+        try {
+            return  repositoryDBChatroom.getAllMessagesFor(openedChatroom);
+
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public void addMessage(UUID id, UUID id1, String message) throws ServiceException {
+        var messageObj=new Message<UUID>(id,id1,message);
+        try {
+            repositoryDBChatroom.addMessage(messageObj);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

@@ -2,8 +2,10 @@ package repository;
 
 import domain.Chatroom;
 import domain.Friendship;
+import domain.Message;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -128,6 +130,60 @@ public class RepositoryDBChatroom implements Repository<Chatroom<UUID>>{
 
     @Override
     public int size() throws RepositoryException {
-        return 0;
+        int dim = 0;
+        try (Connection connection = DriverManager.getConnection(urlDb, usernameDb, passwdDb);
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) as total FROM chatrooms");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            resultSet.next();
+            dim = resultSet.getInt("total");
+
+        } catch (SQLException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+        return dim;
+    }
+
+    public List<Message<UUID>> getAllMessagesFor(Chatroom<UUID> openedChatroom) throws RepositoryException {
+        String sql="SELECT * from messages where chatroom=?";
+        List<Message<UUID>> list=new ArrayList<>();
+
+        try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
+            PreparedStatement preparedStatement= connection.prepareStatement(sql)){
+            preparedStatement.setObject(1, openedChatroom.getId());
+            ResultSet resultSet= preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                Message<UUID> message=new Message<>();
+                message.setChatroom(openedChatroom.getId());
+                message.setSender(resultSet.getObject("sender", UUID.class));
+                message.setContext(resultSet.getString("context"));
+                message.setData(resultSet.getObject("date", LocalDateTime.class));
+                list.add(message);
+            }
+
+        }catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
+        }
+        return list;
+
+    }
+
+    public Message<UUID> addMessage(Message<UUID> messageObj) throws RepositoryException {
+        String sql="INSERT INTO messages( chatroom, sender,context, date) values (?,?,?,?)";
+        List<Message<UUID>> list=new ArrayList<>();
+        try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
+            PreparedStatement preparedStatement= connection.prepareStatement(sql)){
+            preparedStatement.setObject(1, messageObj.getChatroom());
+            preparedStatement.setObject(2, messageObj.getSender());
+            preparedStatement.setObject(3, messageObj.getContext());
+            preparedStatement.setObject(4, messageObj.getData());
+            preparedStatement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
+        }
+        return messageObj;
+
     }
 }

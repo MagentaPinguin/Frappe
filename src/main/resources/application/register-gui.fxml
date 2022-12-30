@@ -25,7 +25,7 @@
          </VBox>
          <HBox spacing="20.0">
             <children>
-               <Button fx:id="exitRegister" lineSpacing="10.0" mnemonicParsing="false" onAction="#abortRegister" text="I'm a tea guy" />
+               <Button fx:id="exitRegister" lineSpacing="10.0" mnemonicParsing="false" onAction="#closeWindow" text="I'm a tea guy" />
                <Button fx:id="registerNetwork" lineSpacing="1000.0" mnemonicParsing="false" onAction="#joinNetwork" text="Join Frappe" />
             </children>
          </HBox>

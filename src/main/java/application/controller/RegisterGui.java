@@ -1,9 +1,10 @@
 package application.controller;
 
+import anexe.Observer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Scene;
+
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,16 +22,14 @@ import java.util.stream.Stream;
 
 
 public class RegisterGui extends AbstractController {
-
+    private  Service service;
+    //" Service
 
     public Button registerNetwork;
-
     public Circle picImgPreview;
-    Service service;
-    //" Service
     public  ImageView imgFrappe;
     private String optionalProfileImage="images/profilePics/pic_basic.jpg";
-    //" Image
+    //" Image & forms
 
     public TextField inputUsername;
     public TextField inputFirstName;
@@ -39,17 +38,27 @@ public class RegisterGui extends AbstractController {
     //" Input fields
 
     public Button exitRegister;
-    public Button joinNetwork;
     //" buttons
+
+
+    /***
+     * Sets some properties of the window's widgets .
+     */
     @FXML
-    void initialize(){
-          picImgPreview.setFill(new ImagePattern(new Image(optionalProfileImage)));
-          inputUsername.textProperty().addListener(e->frappeEvolve());
-          inputFirstName.textProperty().addListener(e->frappeEvolve());
-          inputLastName.textProperty().addListener(e->frappeEvolve());
-          inputPasswd.textProperty().addListener(e->frappeEvolve());
+    void initialize()
+    {
+
+        picImgPreview.setFill(new ImagePattern(new Image(optionalProfileImage)));
+        inputUsername.textProperty().addListener(e->frappeEvolve());
+        inputFirstName.textProperty().addListener(e->frappeEvolve());
+        inputLastName.textProperty().addListener(e->frappeEvolve());
+        inputPasswd.textProperty().addListener(e->frappeEvolve());
 
     }
+
+    /***
+     * Simulates an animation in register window.
+     */
     public void frappeEvolve() {
 
         var x= (int)Stream.of(inputUsername,inputFirstName,inputLastName,inputPasswd).filter(e->!e.getText().isBlank()).count();
@@ -65,46 +74,52 @@ public class RegisterGui extends AbstractController {
             imgFrappe.setImage( new Image("images/stages/Frappe_stage_1.jpg"));}
     }
 
-    public void setService(Service s){
-        this.service=s;
-    }
 
-    public void abortRegister(ActionEvent actionEvent) {
+    /***
+     * Handles the cancel registration process
+     * @param actionEvent
+     */
+    public void closeWindow(ActionEvent actionEvent) {
         Node source = (Node) actionEvent.getSource();
         Stage crtStage = (Stage) source.getScene().getWindow();
         crtStage.close();
-
     }
 
+    /***
+     * Handles the register process.
+     */
     public void joinNetwork( ) {
         try {
             service.addUser(List.of(inputUsername.getText(),inputPasswd.getText(),inputFirstName.getText(),inputLastName.getText(),optionalProfileImage));
-            Alert a= new Alert(Alert.AlertType.CONFIRMATION,"Welcome to the club, Brew!",new ButtonType("YEY"));
-            //Alert created
-            Image img = new Image("images/success_coffee.png", 120, 120, true, true);
-            //Changed icon of the information
-            Stage stage = (Stage) a.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image("images/frappe_icon.png"));
-            //Set icon of a stage
-
-            a.setTitle("Brew created");
-            a.setGraphic( new ImageView(img));
-            //Final settings
-            a.show();
+            condirmationShow("Welcome to the brew!");
 
         } catch (ServiceException e) {
-
             errorShow(e.getMessage());
-        };
-
+        }
     }
 
+    /***
+     * Handles the profile picture chooser.
+     */
     public void pickPicture() {
 
         FileChooser fileChooser=new FileChooser();
         fileChooser.setTitle("Profile picture");
-        fileChooser.setInitialDirectory(new File("C:\\Users\\40748\\Desktop\\Frappe\\src\\main\\resources\\images\\profilePics"));
+
+        var url= this.getClass().getClassLoader().getResource("images").toString();
+
+
+        fileChooser.setInitialDirectory(new File(url.toString()));
         optionalProfileImage=fileChooser.showOpenDialog(new Stage()).toString().substring(49);
         picImgPreview.setFill(new ImagePattern(new Image(optionalProfileImage)));
     }
+
+    /***
+     * Sets the service object for this window
+     * @param service:
+     */
+    public void setService(Service service){
+        this.service=service;
+    }
+
 }

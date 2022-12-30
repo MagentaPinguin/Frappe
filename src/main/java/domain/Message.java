@@ -5,18 +5,25 @@ import java.util.UUID;
 
 public class Message<ID extends UUID> extends Entity<ID>{
 
+
+
+    private ID chatroom;
+
     private ID sender;
 
     private String context;
 
     private LocalDateTime data;
-    public Message(ID sender, String context) {
+    public Message(){}
+    public Message(ID chatroom,ID sender, String context) {
+        this.chatroom=chatroom;
         this.sender = sender;
         this.context = context;
         this.data = LocalDateTime.now();
     }
 
-    public Message(ID sender, String context, LocalDateTime data) {
+    public Message(ID chatroom, ID sender, String context, LocalDateTime data) {
+        this.chatroom=chatroom;
         this.sender = sender;
         this.context = context;
         this.data = data;
@@ -68,4 +75,16 @@ public class Message<ID extends UUID> extends Entity<ID>{
         return result;
     }
 
+    @Override
+    public String toString() {
+        return context+" :"+sender;
+    }
+
+    public ID getChatroom() {
+        return chatroom;
+    }
+
+    public void setChatroom(ID chatroom) {
+        this.chatroom = chatroom;
+    }
 }
