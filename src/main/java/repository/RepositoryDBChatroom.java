@@ -3,6 +3,7 @@ package repository;
 import domain.Chatroom;
 import domain.Friendship;
 import domain.Message;
+import domain.User;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -22,6 +23,23 @@ public class RepositoryDBChatroom implements Repository<Chatroom<UUID>>{
         this.passwdDb = passwdDb;
     }
 
+    public Message<UUID> addMessage(Message<UUID> messageObj) throws RepositoryException {
+        String sql="INSERT INTO messages( chatroom, sender,context, date) values (?,?,?,?)";
+        List<Message<UUID>> list=new ArrayList<>();
+        try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
+            PreparedStatement preparedStatement= connection.prepareStatement(sql)){
+            preparedStatement.setObject(1, messageObj.getChatroom());
+            preparedStatement.setObject(2, messageObj.getSender());
+            preparedStatement.setObject(3, messageObj.getContext());
+            preparedStatement.setObject(4, messageObj.getData());
+            preparedStatement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new RepositoryException(e.getMessage());
+        }
+        return messageObj;
+
+    }
 
     @Override
     public Chatroom<UUID> add(Chatroom<UUID> entity) throws RepositoryException {
@@ -48,7 +66,33 @@ public class RepositoryDBChatroom implements Repository<Chatroom<UUID>>{
 
     @Override
     public Chatroom<UUID> delete(Chatroom<UUID> entity) throws RepositoryException {
-        return null;
+        if (find(entity).isEmpty())
+            throw new RepositoryException("Nonexistent entity");
+
+        String sql = "delete from chatrooms where Id=?";
+        try (Connection connection = DriverManager.getConnection(urlDb, usernameDb, passwdDb);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, entity.getId());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RepositoryException(e);
+        }
+        return entity;
+    }
+    public void deleteChatroom(Chatroom<UUID> entity) throws RepositoryException {
+        if (find(entity).isEmpty())
+            throw new RepositoryException("Nonexistent entity");
+
+        String sql = "delete from chatrooms where Id=?";
+        try (Connection connection = DriverManager.getConnection(urlDb, usernameDb, passwdDb);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, entity.getId());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RepositoryException(e);
+        }
     }
 
     @Override
@@ -169,21 +213,20 @@ public class RepositoryDBChatroom implements Repository<Chatroom<UUID>>{
 
     }
 
-    public Message<UUID> addMessage(Message<UUID> messageObj) throws RepositoryException {
-        String sql="INSERT INTO messages( chatroom, sender,context, date) values (?,?,?,?)";
-        List<Message<UUID>> list=new ArrayList<>();
+
+
+    public void exitChatroom(Chatroom<UUID> chat, User user) throws RepositoryException {
+        String sql=" delete from chatmembers where id=? and id_member=? ";
         try(Connection connection= DriverManager.getConnection(urlDb,usernameDb,passwdDb);
             PreparedStatement preparedStatement= connection.prepareStatement(sql)){
-            preparedStatement.setObject(1, messageObj.getChatroom());
-            preparedStatement.setObject(2, messageObj.getSender());
-            preparedStatement.setObject(3, messageObj.getContext());
-            preparedStatement.setObject(4, messageObj.getData());
+            preparedStatement.setObject(1, chat.getId());
+            preparedStatement.setObject(2, user.getId());
             preparedStatement.executeUpdate();
 
         }catch (SQLException e){
             throw new RepositoryException(e.getMessage());
         }
-        return messageObj;
-
     }
+
+
 }

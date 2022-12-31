@@ -155,6 +155,15 @@ public class Service implements Subject {
         }
 
     }
+
+
+    public void deleteChat(Chatroom<UUID> chat){
+        try {
+            repositoryDBChatroom.deleteChatroom(chat);
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
     //" Delete
 
     /***
@@ -277,6 +286,15 @@ public class Service implements Subject {
     }
     //"Getters
 
+    public void exitChat(Chatroom<UUID> chat ,User account) throws ServiceException {
+        try {
+            repositoryDBChatroom.exitChatroom(chat,account);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+
     @Override
     public void register(Observer obj) {
         observersList.add(obj);
@@ -293,5 +311,6 @@ public class Service implements Subject {
             x.update();
         }
     }
+
     //" Observer
 }

@@ -55,7 +55,6 @@ public class LoginGui extends AbstractController{
 
 
         } catch (ServiceException | IOException e) {
-            e.printStackTrace();
             errorShow(e.getMessage());
         }
     }

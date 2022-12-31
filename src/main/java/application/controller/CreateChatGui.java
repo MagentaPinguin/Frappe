@@ -62,6 +62,7 @@ public class CreateChatGui extends AbstractController{
         try {
             service.createChatRoom(arg,account);
             confirmationShow("Chatroom created!");
+            service.notifyObservers();
         } catch (ServiceException e) {
             errorShow(e.getMessage());
         }

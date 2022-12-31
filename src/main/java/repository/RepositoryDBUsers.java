@@ -77,7 +77,7 @@ public class RepositoryDBUsers implements Repository<User> {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RepositoryException(e);
         }
         return entity;
     }

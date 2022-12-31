@@ -140,16 +140,21 @@
                         </TableView>
                         <Button fx:id="buttonChatCreate" layoutX="28.0" layoutY="286.0" mnemonicParsing="false" onAction="#createChat" text="Create chat" />
                         <Button fx:id="buttonOpenChat" layoutX="176.0" layoutY="285.0" mnemonicParsing="false" onAction="#openSelectedChat" text="Open chat" />
-                        <AnchorPane fx:id="paneChatBackground" layoutX="244.0" layoutY="14.0" prefHeight="285.0" prefWidth="241.0">
+                        <AnchorPane fx:id="paneChatBackground" layoutX="260.0" layoutY="14.0" prefHeight="285.0" prefWidth="227.0">
                            <children>
-                              <TextArea fx:id="areaMessages" layoutX="30.0" layoutY="17.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="215.0" prefWidth="197.0" style="-fx-font-alignment: right;" />
-                              <Button fx:id="buttonSendMessage" layoutX="103.0" layoutY="258.0" mnemonicParsing="false" onAction="#addMessage" prefHeight="25.0" prefWidth="51.0" text="Send" />
+                              <TextArea fx:id="areaMessages" layoutX="31.0" layoutY="33.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="215.0" prefWidth="197.0">
+                                  <style>-webkit-fx-font-align: ;-moz-fx-font-align: ;-ms-fx-font-align:
+                                      ;-o-fx-font-align: ;-khtml-fx-font-align: ;fx-font-align: ;ment: right;
+                                  </style>
+                              </TextArea>
+                              <Button fx:id="buttonSendMessage" layoutX="181.0" layoutY="248.0" mnemonicParsing="false" onAction="#addMessage" prefHeight="25.0" prefWidth="51.0" text="Send" />
                               <ImageView fx:id="pic" fitHeight="20.0" fitWidth="19.0" layoutX="213.0" onMouseClicked="#closeChatPane" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/x_icon.jpg" />
                                  </image>
                               </ImageView>
-                              <TextField fx:id="fieldInputMessage" accessibleRole="PAGE_ITEM" layoutX="30.0" layoutY="232.0" prefHeight="25.0" prefWidth="195.0" />
+                              <TextField fx:id="fieldInputMessage" accessibleRole="PAGE_ITEM" layoutX="31.0" layoutY="248.0" prefHeight="25.0" prefWidth="139.0" />
+                              <Button fx:id="buttonExitChatroom" layoutX="31.0" layoutY="1.0" mnemonicParsing="false" onAction="#exitChatroom" text="Exit chatroom" />
                            </children>
                         </AnchorPane>
                         <Button fx:id="buttonJoinChat" layoutX="120.0" layoutY="286.0" mnemonicParsing="false" onAction="#joinChatroom" text="Join" />

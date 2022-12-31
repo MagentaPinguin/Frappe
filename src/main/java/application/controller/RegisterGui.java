@@ -76,7 +76,7 @@ public class RegisterGui extends AbstractController {
 
     /***
      * Handles the cancel registration process
-     * @param actionEvent
+     * @param actionEvent: the event
      */
     public void closeWindow(ActionEvent actionEvent) {
         Node source = (Node) actionEvent.getSource();

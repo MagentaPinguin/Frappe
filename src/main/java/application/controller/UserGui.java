@@ -1,5 +1,6 @@
 package application.controller;
 
+import anexe.Constants;
 import anexe.Observer;
 import application.Application;
 import domain.*;
@@ -42,7 +43,6 @@ import static anexe.Constants.FORMATTER;
 public class UserGui extends AbstractController implements Observer {
 
 
-
     private Chatroom<UUID> openedChatroom;
     private Service service;
     private User account;
@@ -79,6 +79,7 @@ public class UserGui extends AbstractController implements Observer {
 
 
 
+    public Button buttonEexitChatroom;
     public Button buttonSendMessage;
     public Button buttonSaveModify;
     public Button buttonCancel;
@@ -194,6 +195,20 @@ public class UserGui extends AbstractController implements Observer {
         chatroomModel.setAll(list);
 
     }
+    private void populateWithMessages() {
+
+        try {
+
+            var messages = service.getAllMessagesFor(openedChatroom);
+            messages.sort(Comparator.comparing(Message::getData));
+            var finale =messages.stream().map(e->e.getContext()+" |"+service.getUserById(e.getSender()).getUsername()+"\n").collect(Collectors.joining());
+            areaMessages.setText(finale);
+
+        } catch (ServiceException e) {
+            errorShow(e.getMessage());
+        }
+
+    }
 
     @FXML
     void initialize() {
@@ -235,6 +250,7 @@ public class UserGui extends AbstractController implements Observer {
         groupUpdate.setVisible(false);
 
 
+
     }
 
     public void setUp(Service service, User user) {
@@ -259,6 +275,7 @@ public class UserGui extends AbstractController implements Observer {
         textFieldFirstname.setText(account.getFirstname());
         textFieldLastName.setText(account.getLastname());
         circlePicture.setFill(new ImagePattern(new Image(account.getPictureReference())));
+
     }
 
     public void setUser(User user) {
@@ -276,6 +293,7 @@ public class UserGui extends AbstractController implements Observer {
         inputPasswd.setText("");
         groupUpdate.setVisible(!groupUpdate.isVisible());
         buttonModify.setVisible(!buttonModify.isVisible());
+        service.notifyObservers();
     }
 
     public void doUpdate() {
@@ -324,8 +342,7 @@ public class UserGui extends AbstractController implements Observer {
         try {
             service.sentRequest(account, user);
             confirmationShow("Request sent!");
-            populateUsers();
-            populateRequests();
+            service.notifyObservers();
         } catch (ServiceException e) {
 
             errorShow(e.getMessage());
@@ -349,9 +366,7 @@ public class UserGui extends AbstractController implements Observer {
             service.addFriendship(req);
             req.setStatus("accepted");
             service.updateRequest(req);
-            populateFriends();
-            populateRequests();
-            populateUsers();
+            service.notifyObservers();
             confirmationShow("You are now friends with this user");
         } catch (ServiceException e) {
             e.printStackTrace();
@@ -364,9 +379,7 @@ public class UserGui extends AbstractController implements Observer {
             var req=getSelectedRequest();
             req.setStatus("deny");
             service.updateRequest(req);
-            populateFriends();
-            populateRequests();
-            populateUsers();
+            service.notifyObservers();
             confirmationShow("You successfully deny this friend request");
         } catch (ServiceException e) {
             e.printStackTrace();
@@ -382,9 +395,7 @@ public class UserGui extends AbstractController implements Observer {
         }
         try {
             service.deleteFriendship(account,friend);
-            populateFriends();
-            populateRequests();
-            populateUsers();
+            service.notifyObservers();
             errorShow("You and "+friend.getUsername()+" are no longer friends now");
 
         } catch (ServiceException e) {
@@ -392,27 +403,9 @@ public class UserGui extends AbstractController implements Observer {
         }
 
     }
-
     public void closeChatPane(MouseEvent mouseEvent) {
         paneChatBackground.setVisible(false);
         
-    }
-
-    private void populateWithMessages() {
-
-
-
-        try {
-
-         var messages = service.getAllMessagesFor(openedChatroom);
-         messages.sort(Comparator.comparing(Message::getData));
-         var finale =messages.stream().map(e->e.getContext()+" |"+service.getUserById(e.getSender()).getUsername()+"\n").collect(Collectors.joining());
-         areaMessages.setText(finale);
-
-        } catch (ServiceException e) {
-            errorShow(e.getMessage());
-        }
-
     }
 
     public void openSelectedChat()
@@ -427,8 +420,6 @@ public class UserGui extends AbstractController implements Observer {
     }
 
 
-
-
     public void createChat() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("create-chat-gui.fxml"));
         Scene scene = new Scene(fxmlLoader.load()) ;
@@ -440,6 +431,7 @@ public class UserGui extends AbstractController implements Observer {
         stage.getIcons().add(new Image("images/frappe_icon.png"));
         stage.setResizable(false);
         stage.show();
+
     }
 
     public void joinChatroom(ActionEvent actionEvent){
@@ -463,21 +455,18 @@ public class UserGui extends AbstractController implements Observer {
         try {
             service.addMemberToChat(selected,account);
             confirmationShow("You was accepted to "+selected.getName());
-            populateChatrooms();
+            service.notifyObservers();
         } catch (ServiceException e) {
             errorShow(e.getMessage());
         }
-
-
     }
-
 
     public void addMessage() {
 
         var message=fieldInputMessage.getText();
         try {
             service.addMessage(openedChatroom.getId(),account.getId(),message);
-            populateWithMessages();
+            service.notifyObservers();
         } catch (ServiceException e) {
            errorShow(e.getMessage());
         }
@@ -487,11 +476,35 @@ public class UserGui extends AbstractController implements Observer {
     @Override
     public void update() {
         if(openedChatroom!=null)
-            populateWithMessages();
+        populateWithMessages();
         populateChatrooms();
         populateRequests();
         populateUsers();
         populateFriends();
+
+    }
+
+    public void exitChatroom(ActionEvent actionEvent) {
+        if(openedChatroom==null)
+            errorShow("Select a chatroom!");
+
+        if(openedChatroom.getParticipants().size()==1){
+            ChoiceDialog<String> choice=new ChoiceDialog<>("No","Yes");
+            var x=choice.showAndWait();
+            if(x.isPresent() && x.get().equals("Yes")){
+                service.deleteChat(openedChatroom);
+                confirmationShow("You exit "+openedChatroom.getName()+", and the chatroom got deleted.");
+            }
+
+        } else
+            try {
+                service.exitChat(openedChatroom,account);
+                confirmationShow("You exit "+openedChatroom.getName());
+
+            } catch (ServiceException e) {
+                throw new RuntimeException(e);
+            }
+            service.notifyObservers();
 
     }
 }
