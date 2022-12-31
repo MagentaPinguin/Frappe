@@ -76,30 +76,6 @@ public class RepositoryDbRequests implements Repository<Request<UUID>> {
         return entity;
     }
 
-   /* public List<Request<UUID>> findRequests(UUID Receiver) {
-        List<Request<UUID>> requestList = new ArrayList<>();
-
-        try (Connection connection = DriverManager.getConnection(urlDb, usernameDb, passwdDb);
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM requests where receiver=?")){
-            preparedStatement.setObject(1, Receiver);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                var id = resultSet.getObject("id", UUID.class);
-                UUID sender = resultSet.getObject("sender", UUID.class);
-                UUID receiver = resultSet.getObject("receiver", UUID.class);
-                String status= resultSet.getString("status");
-                var req = new Request<UUID>(sender, receiver,status);
-                req.setId(id);
-                req.setDate(resultSet.getTimestamp("data").toLocalDateTime());
-                requestList.add(req);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return requestList;
-    }*/
     @Override
     public Optional<Request<UUID>> find(Request<UUID> entity) {
         Request<UUID> req=new Request<>();

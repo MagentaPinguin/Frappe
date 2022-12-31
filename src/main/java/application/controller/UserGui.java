@@ -10,7 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.AccessibleRole;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -20,21 +19,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.controlsfx.control.spreadsheet.Grid;
-import repository.RepositoryException;
 import service.Service;
 import service.ServiceException;
 
 import java.io.IOException;
-import java.net.PasswordAuthentication;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -306,8 +300,8 @@ public class UserGui extends AbstractController implements Observer {
         //Lastname
 
         try {
-            service.update(updated);
-            condirmationShow("Update was a success!");
+            service.updateUser(updated);
+            confirmationShow("Update was a success!");
             setUser(updated);
             modify();
 
@@ -328,8 +322,8 @@ public class UserGui extends AbstractController implements Observer {
             return;
         }
         try {
-            service.addRequest(account, user);
-            condirmationShow("Request sent!");
+            service.sentRequest(account, user);
+            confirmationShow("Request sent!");
             populateUsers();
             populateRequests();
         } catch (ServiceException e) {
@@ -352,13 +346,13 @@ public class UserGui extends AbstractController implements Observer {
     public void acceptRequest() {
         try {
             var req=getSelectedRequest();
-            service.addFriend(req);
+            service.addFriendship(req);
             req.setStatus("accepted");
             service.updateRequest(req);
             populateFriends();
             populateRequests();
             populateUsers();
-            condirmationShow("You are now friends with this user");
+            confirmationShow("You are now friends with this user");
         } catch (ServiceException e) {
             e.printStackTrace();
             errorShow("Error on accepting request!");
@@ -373,7 +367,7 @@ public class UserGui extends AbstractController implements Observer {
             populateFriends();
             populateRequests();
             populateUsers();
-            condirmationShow("You successfully deny this friend request");
+            confirmationShow("You successfully deny this friend request");
         } catch (ServiceException e) {
             e.printStackTrace();
             errorShow("Error on accepting request!");
@@ -468,7 +462,7 @@ public class UserGui extends AbstractController implements Observer {
 
         try {
             service.addMemberToChat(selected,account);
-            condirmationShow("You was accepted to "+selected.getName());
+            confirmationShow("You was accepted to "+selected.getName());
             populateChatrooms();
         } catch (ServiceException e) {
             errorShow(e.getMessage());

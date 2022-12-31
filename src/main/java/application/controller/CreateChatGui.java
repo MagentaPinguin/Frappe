@@ -4,7 +4,6 @@ import domain.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
@@ -62,7 +61,7 @@ public class CreateChatGui extends AbstractController{
         }
         try {
             service.createChatRoom(arg,account);
-            condirmationShow("Chatroom created!");
+            confirmationShow("Chatroom created!");
         } catch (ServiceException e) {
             errorShow(e.getMessage());
         }

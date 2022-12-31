@@ -1,6 +1,5 @@
 package application.controller;
 
-import anexe.Observer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -88,11 +87,11 @@ public class RegisterGui extends AbstractController {
     /***
      * Handles the register process.
      */
-    public void joinNetwork( ) {
+    public void joinNetwork(ActionEvent actionEvent ) {
         try {
-            service.addUser(List.of(inputUsername.getText(),inputPasswd.getText(),inputFirstName.getText(),inputLastName.getText(),optionalProfileImage));
-            condirmationShow("Welcome to the brew!");
-
+            service.registerUser(List.of(inputUsername.getText(),inputPasswd.getText(),inputFirstName.getText(),inputLastName.getText(),optionalProfileImage));
+            confirmationShow("Welcome to the brew!");
+            closeWindow(actionEvent);
         } catch (ServiceException e) {
             errorShow(e.getMessage());
         }
@@ -105,11 +104,7 @@ public class RegisterGui extends AbstractController {
 
         FileChooser fileChooser=new FileChooser();
         fileChooser.setTitle("Profile picture");
-
-        var url= this.getClass().getClassLoader().getResource("images").toString();
-
-
-        fileChooser.setInitialDirectory(new File(url.toString()));
+        fileChooser.setInitialDirectory(new File("C:\\Users\\40748\\Desktop\\Frappe\\src\\main\\resources\\images\\profilePics"));
         optionalProfileImage=fileChooser.showOpenDialog(new Stage()).toString().substring(49);
         picImgPreview.setFill(new ImagePattern(new Image(optionalProfileImage)));
     }
