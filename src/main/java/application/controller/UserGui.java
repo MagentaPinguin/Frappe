@@ -1,13 +1,11 @@
 package application.controller;
 
-import anexe.Constants;
 import anexe.Observer;
 import application.Application;
 import domain.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -17,7 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+
 import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.paint.ImagePattern;
@@ -79,7 +77,7 @@ public class UserGui extends AbstractController implements Observer {
 
 
 
-    public Button buttonEexitChatroom;
+    public Button buttonExitChatroom;
     public Button buttonSendMessage;
     public Button buttonSaveModify;
     public Button buttonCancel;
@@ -126,7 +124,7 @@ public class UserGui extends AbstractController implements Observer {
     //"Table chatroom
 
     private void populateUsers() {
-        List<User> list = null;
+        List<User> list;
         try {
             list = service.getUsers();
         } catch (ServiceException e) {
@@ -154,7 +152,7 @@ public class UserGui extends AbstractController implements Observer {
     }
 
     private void populateRequests() {
-        List<Request<UUID>> list = null;
+        List<Request<UUID>> list;
         try {
             list = service.getRequestsFor(account);
         } catch (ServiceException e) {
@@ -169,7 +167,7 @@ public class UserGui extends AbstractController implements Observer {
     }
 
     private void populateFriends() {
-        List<Friendship<UUID>> list = null;
+        List<Friendship<UUID>> list;
         try {
             list = service.getFriendsFor(account);
         } catch (ServiceException e) {
@@ -185,7 +183,7 @@ public class UserGui extends AbstractController implements Observer {
     }
     private void populateChatrooms() {
 
-        List<Chatroom<UUID>> list = null;
+        List<Chatroom<UUID>> list;
         try {
             list = service.getAllChatroom();
         } catch (ServiceException e) {
@@ -352,7 +350,6 @@ public class UserGui extends AbstractController implements Observer {
 
     private Request<UUID> getSelectedRequest() {
         var sender = tableRequests.getSelectionModel().getSelectedItem().getKey();
-        Request<UUID> found=new Request<>();
         try {
             return service.getRequest(sender, account);
         } catch (ServiceException e) {
@@ -403,7 +400,7 @@ public class UserGui extends AbstractController implements Observer {
         }
 
     }
-    public void closeChatPane(MouseEvent mouseEvent) {
+    public void closeChatPane() {
         paneChatBackground.setVisible(false);
         
     }
@@ -414,7 +411,7 @@ public class UserGui extends AbstractController implements Observer {
         if(openedChatroom==null){
             errorShow("Select a chatroom!");
             return;
-        };
+        }
         populateWithMessages();
         paneChatBackground.setVisible(true);
     }
@@ -434,7 +431,7 @@ public class UserGui extends AbstractController implements Observer {
 
     }
 
-    public void joinChatroom(ActionEvent actionEvent){
+    public void joinChatroom(){
         var selected= tableChatroom.getSelectionModel().getSelectedItem();
         if(selected==null) {
             errorShow("Select a chatroom to join!");
@@ -476,7 +473,7 @@ public class UserGui extends AbstractController implements Observer {
     @Override
     public void update() {
         if(openedChatroom!=null)
-        populateWithMessages();
+            populateWithMessages();
         populateChatrooms();
         populateRequests();
         populateUsers();
@@ -484,7 +481,7 @@ public class UserGui extends AbstractController implements Observer {
 
     }
 
-    public void exitChatroom(ActionEvent actionEvent) {
+    public void exitChatroom() {
         if(openedChatroom==null)
             errorShow("Select a chatroom!");
 
@@ -504,7 +501,7 @@ public class UserGui extends AbstractController implements Observer {
             } catch (ServiceException e) {
                 throw new RuntimeException(e);
             }
-            service.notifyObservers();
+        service.notifyObservers();
 
     }
 }

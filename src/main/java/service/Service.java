@@ -300,10 +300,6 @@ public class Service implements Subject {
         observersList.add(obj);
     }
 
-    @Override
-    public void unregister(Observer obj) {
-        observersList.remove(obj);
-    }
 
     @Override
     public void notifyObservers() {
