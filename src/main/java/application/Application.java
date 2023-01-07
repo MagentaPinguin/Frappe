@@ -21,7 +21,6 @@ public class Application extends javafx.application.Application {
         ctrl.setService(service);
         stage.setTitle("FRAPPE");
         stage.setScene(scene);
-
         stage.getIcons().add(new Image("images/frappe_icon.png"));
         stage.setResizable(false);
 

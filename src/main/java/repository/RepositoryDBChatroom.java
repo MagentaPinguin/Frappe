@@ -1,7 +1,7 @@
 package repository;
 
 import domain.Chatroom;
-import domain.Friendship;
+
 import domain.Message;
 import domain.User;
 

@@ -31,7 +31,7 @@ public abstract class AbstractController {
         Stage stage = (Stage) a.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image("images/frappe_icon.png"));
 
-        a.setTitle("ERROR");
+        a.setTitle("CONFIRMATION");
         a.setGraphic( new ImageView(img));
 
         a.show();

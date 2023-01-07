@@ -82,7 +82,7 @@
                </content></Tab>
             <Tab fx:id="tabNetwork" text="Network">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: FFFFFF;">
                      <children>
                         <TableView fx:id="tableNetwork" layoutX="14.0" layoutY="25.0" prefHeight="292.0" prefWidth="226.0">
                           <columns>
@@ -93,13 +93,18 @@
                         </TableView>
                         <TextField fx:id="searchbar" layoutX="260.0" layoutY="25.0" prefHeight="28.0" prefWidth="168.0" promptText="Search" />
                         <Button fx:id="buttonRequest" layoutX="260.0" layoutY="65.0" mnemonicParsing="false" onAction="#sendRequest" text="Send friend request " />
+                        <ImageView fitHeight="333.0" fitWidth="200.0" layoutX="441.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/banner_netwwork.jpg" />
+                           </image>
+                        </ImageView>
                      </children>
                   </AnchorPane>
               </content>
             </Tab>
           <Tab fx:id="tabFriends" text="Friends">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: FFFFFF;">
                      <children>
                         <TableView fx:id="tableFriends" layoutX="14.0" layoutY="17.0" prefHeight="311.0" prefWidth="272.0">
                           <columns>
@@ -108,28 +113,39 @@
                               <TableColumn fx:id="colDateFriends" prefWidth="134.0" text="Date" />
                           </columns>
                         </TableView>
-                        <Button fx:id="buttonDeleteFriend" layoutX="321.0" layoutY="48.0" mnemonicParsing="false" onAction="#deleteFriend" text="Delete friend" />
+                        <Button fx:id="buttonDeleteFriend" layoutX="321.0" layoutY="160.0" mnemonicParsing="false" onAction="#deleteFriend" text="Delete friend" />
+                        <ImageView fitHeight="333.0" fitWidth="200.0" layoutX="445.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/banner_friendship.jpg" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="buttonDirectMsg" layoutX="321.0" layoutY="121.0" mnemonicParsing="false" onAction="#sendDirectMsg" text="Send a msg" />
                      </children>
                   </AnchorPane>
                </content></Tab>
-            <Tab fx:id="tabRequest" text="Requests">
+            <Tab fx:id="tabRequest" text="Request">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: ffffff;">
                      <children>
-                        <TableView fx:id="tableRequests" layoutX="227.0" layoutY="23.0" prefHeight="295.0" prefWidth="214.0">
+                        <TableView fx:id="tableRequests" layoutX="248.0" layoutY="23.0" prefHeight="295.0" prefWidth="214.0">
                           <columns>
                             <TableColumn fx:id="colRequestUsername" prefWidth="110.0" text="From" />
                             <TableColumn fx:id="colRequestDate" prefWidth="103.33331298828125" text="Data" />
                           </columns>
                         </TableView>
-                        <Button fx:id="buttonAcceptRequest" layoutX="77.0" layoutY="128.0" mnemonicParsing="false" onAction="#acceptRequest" text="Accept request" />
-                        <Button fx:id="buttonDenyRequest" layoutX="77.0" layoutY="188.0" mnemonicParsing="false" onAction="#denyRequest" prefHeight="25.0" prefWidth="95.0" text="Deny request" />
+                        <Button fx:id="buttonAcceptRequest" layoutX="124.0" layoutY="119.0" mnemonicParsing="false" onAction="#acceptRequest" text="Accept request" />
+                        <Button fx:id="buttonDenyRequest" layoutX="124.0" layoutY="187.0" mnemonicParsing="false" onAction="#denyRequest" prefHeight="25.0" prefWidth="95.0" text="Deny request" />
+                        <ImageView fitHeight="292.0" fitWidth="43.0" layoutX="14.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/banner_request.jpg" />
+                           </image>
+                        </ImageView>
                      </children>
                   </AnchorPane>
                </content></Tab>
             <Tab fx:id="tabChat" text="Chat">
                <content>
-                  <AnchorPane prefHeight="355.0" prefWidth="535.0">
+                  <AnchorPane prefHeight="355.0" prefWidth="535.0" style="-fx-background-color: ffffff;">
                      <children>
                         <TableView fx:id="tableChatroom" layoutX="14.0" layoutY="22.0" prefHeight="247.0" prefWidth="248.0">
                           <columns>
@@ -140,12 +156,10 @@
                         </TableView>
                         <Button fx:id="buttonChatCreate" layoutX="28.0" layoutY="286.0" mnemonicParsing="false" onAction="#createChat" text="Create chat" />
                         <Button fx:id="buttonOpenChat" layoutX="176.0" layoutY="285.0" mnemonicParsing="false" onAction="#openSelectedChat" text="Open chat" />
-                        <AnchorPane fx:id="paneChatBackground" layoutX="260.0" layoutY="14.0" prefHeight="285.0" prefWidth="227.0">
+                        <AnchorPane fx:id="paneChatBackground" layoutX="252.0" layoutY="21.0" prefHeight="285.0" prefWidth="227.0">
                            <children>
                               <TextArea fx:id="areaMessages" layoutX="31.0" layoutY="33.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="215.0" prefWidth="197.0">
-                                  <style>-webkit-fx-font-align: ;-moz-fx-font-align: ;-ms-fx-font-align:
-                                      ;-o-fx-font-align: ;-khtml-fx-font-align: ;fx-font-align: ;ment: right;
-                                  </style>
+
                               </TextArea>
                               <Button fx:id="buttonSendMessage" layoutX="181.0" layoutY="248.0" mnemonicParsing="false" onAction="#addMessage" prefHeight="25.0" prefWidth="51.0" text="Send" />
                               <ImageView fx:id="pic" fitHeight="20.0" fitWidth="19.0" layoutX="213.0" onMouseClicked="#closeChatPane" pickOnBounds="true" preserveRatio="true">
@@ -158,6 +172,11 @@
                            </children>
                         </AnchorPane>
                         <Button fx:id="buttonJoinChat" layoutX="120.0" layoutY="286.0" mnemonicParsing="false" onAction="#joinChatroom" text="Join" />
+                        <ImageView fx:id="bannerChat" fitHeight="235.0" fitWidth="78.0" layoutX="434.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/banner_chat.jpg" />
+                           </image>
+                        </ImageView>
                      </children></AnchorPane>
                </content></Tab>
         </tabs>

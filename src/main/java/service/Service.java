@@ -4,11 +4,14 @@ import anexe.Observer;
 import anexe.Subject;
 import domain.*;
 import domain.validators.*;
+import javafx.event.ActionEvent;
 import repository.*;
 
+import java.lang.invoke.VarHandle;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -91,7 +94,7 @@ public class Service implements Subject {
         try {
             validatorChatroom.validate(arg);
             int type = Integer.parseInt(arg.get(1));
-            var aux = new Chatroom<UUID>(arg.get(0), Integer.parseInt(arg.get(1)));
+            var aux = new Chatroom<UUID>(arg.get(0), type);
             if (type == 1)
                 aux.setPasswd(arg.get(2));
             repositoryDBChatroom.add(aux);
@@ -109,9 +112,6 @@ public class Service implements Subject {
      * @throws ServiceException: Handles any validation or repository exception
      */
     public void addMemberToChat(Chatroom<UUID> selected, User account) throws ServiceException {
-        if (selected.isMember(account.getId())) {
-            throw new ServiceException("Already member");
-        }
         try {
             repositoryDBChatroom.joinChatroom(selected.getId(), account.getId());
         } catch (RepositoryException e) {
@@ -307,6 +307,19 @@ public class Service implements Subject {
             x.update();
         }
     }
-
     //" Observer
+
+    public Optional<Chatroom<UUID>> getChatroom(User owner, User friend) {
+        var aux=new Chatroom<UUID>();
+        aux.setName(owner.getUsername()+"&"+friend.getUsername());
+        var found=repositoryDBChatroom.find(aux);
+        if(found.isEmpty()) {
+            aux.setName(friend.getUsername()+"&"+owner.getUsername());
+            found=repositoryDBChatroom.find(aux);
+        }
+
+        return found;
+
+    }
+
 }

@@ -6,6 +6,7 @@ import domain.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -41,6 +42,9 @@ import static anexe.Constants.FORMATTER;
 public class UserGui extends AbstractController implements Observer {
 
 
+    public ImageView bannerChat;
+
+
     private Chatroom<UUID> openedChatroom;
     private Service service;
     private User account;
@@ -48,7 +52,6 @@ public class UserGui extends AbstractController implements Observer {
 
     public AnchorPane paneChatBackground;
     public AnchorPane anchorPane;
-
     public TextArea areaMessages;
     //"Layout
 
@@ -66,9 +69,10 @@ public class UserGui extends AbstractController implements Observer {
 
 
     public Tab tabFriends;
-    public Tab tabChat;
-    public Tab tabRequest;
     public Tab tabProfile;
+    public Tab tabNetwork;
+    public Tab tabRequest;
+    public Tab tabChat;
     //"Tabs
 
 
@@ -88,7 +92,7 @@ public class UserGui extends AbstractController implements Observer {
     public Button buttonDeleteFriend;
     public Button buttonChatCreate;
     public Button buttonOpenChat;
-
+    public Button buttonDirectMsg;
     public Button buttonJoinChat;
     //"Buttons
 
@@ -215,7 +219,7 @@ public class UserGui extends AbstractController implements Observer {
         tabFriends.setGraphic(new ImageView("images/friends.png"));
         tabRequest.setGraphic(new ImageView("images/request.png"));
         tabChat.setGraphic(new ImageView("images/chat.png"));
-
+        tabNetwork.setGraphic(new ImageView("images/network.png"));
 
         colUsernameNetwork.setCellValueFactory(new PropertyValueFactory<>("username"));
         colFirstnameNetwork.setCellValueFactory(new PropertyValueFactory<>("firstname"));
@@ -402,7 +406,8 @@ public class UserGui extends AbstractController implements Observer {
     }
     public void closeChatPane() {
         paneChatBackground.setVisible(false);
-        
+        bannerChat.setVisible(true);
+
     }
 
     public void openSelectedChat()
@@ -414,6 +419,7 @@ public class UserGui extends AbstractController implements Observer {
         }
         populateWithMessages();
         paneChatBackground.setVisible(true);
+        bannerChat.setVisible(false);
     }
 
 
@@ -437,13 +443,18 @@ public class UserGui extends AbstractController implements Observer {
             errorShow("Select a chatroom to join!");
             return;
         }
+        if(selected.isMember(account.getId())){
+            errorShow("Already a member!");
+            return;
+        }
+
         if(selected.getType()==1){
             TextInputDialog passwd=new TextInputDialog();
             passwd.setTitle("Enter Chatroom password");
             passwd.setGraphic(new ImageView(new Image("images/img_lock.jpg")));
             var entered=passwd.showAndWait();
 
-            if(!selected.getPasswd().equals(entered.get())){
+            if(entered.isPresent() && !selected.getPasswd().equals(entered.get())){
                 errorShow("Incorrect password");
                 return;
             }
@@ -463,6 +474,7 @@ public class UserGui extends AbstractController implements Observer {
         var message=fieldInputMessage.getText();
         try {
             service.addMessage(openedChatroom.getId(),account.getId(),message);
+            fieldInputMessage.setText("");
             service.notifyObservers();
         } catch (ServiceException e) {
            errorShow(e.getMessage());
@@ -501,7 +513,46 @@ public class UserGui extends AbstractController implements Observer {
             } catch (ServiceException e) {
                 throw new RuntimeException(e);
             }
+
+        closeChatPane();
         service.notifyObservers();
+    }
+
+    public void sendDirectMsg(ActionEvent actionEvent) {
+        var selected=tableFriends.getSelectionModel().getSelectedItem();
+        if(selected==null){
+            errorShow("Select a friend");
+            return;
+        }
+        var friend=selected.getKey();
+
+        TextInputDialog msg=new TextInputDialog();
+        msg.setTitle("Direct message");
+        msg.setContentText("Write a message");
+        msg.showAndWait().ifPresent(txt->fieldInputMessage.setText(txt));
+
+        var x=service.getChatroom(account,friend);
+        if(x.isEmpty()){
+            try {
+                service.createChatRoom(List.of(account.getUsername()+"&"+friend.getUsername(),"1","NEVER"),account);
+                x=service.getChatroom(account,friend);
+                service.addMemberToChat(x.get(),friend);
+
+            } catch (ServiceException e) {
+                errorShow(e.getMessage());
+            }
+
+        }
+        try {
+            service.addMessage(x.get().getId(),account.getId(),fieldInputMessage.getText());
+            service.notifyObservers();
+            fieldInputMessage.setText("");
+        } catch (ServiceException e) {
+            errorShow(e.getMessage());
+        }
+        confirmationShow("Message sent to "+friend.getUsername());
 
     }
+
+
 }

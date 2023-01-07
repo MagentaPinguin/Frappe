@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import service.Service;
 import service.ServiceException;
@@ -21,6 +22,7 @@ public class LoginGui extends AbstractController{
     //" TextFields
 
     public Button buttonLogin;
+    public AnchorPane background;
     //"Buttons
 
     private Service service;
@@ -28,6 +30,7 @@ public class LoginGui extends AbstractController{
 
     @FXML
     void initialize(){
+
     }
 
     /***
@@ -57,6 +60,8 @@ public class LoginGui extends AbstractController{
         } catch (ServiceException | IOException e) {
             errorShow(e.getMessage());
         }
+        txtFieldUsername.clear();
+        txtFieldPasswd.clear();
     }
 
     /***
@@ -88,5 +93,6 @@ public class LoginGui extends AbstractController{
      */
     public void setService(Service service) {
         this.service=service;
+        buttonLogin.requestFocus();
     }
 }
