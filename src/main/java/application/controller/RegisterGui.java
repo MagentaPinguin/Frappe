@@ -104,8 +104,9 @@ public class RegisterGui extends AbstractController {
 
         FileChooser fileChooser=new FileChooser();
         fileChooser.setTitle("Profile picture");
-        fileChooser.setInitialDirectory(new File("C:\\Users\\40748\\Desktop\\Frappe\\src\\main\\resources\\images\\profilePics"));
-        optionalProfileImage=fileChooser.showOpenDialog(new Stage()).toString().substring(49);
+        fileChooser.setInitialDirectory(new File("C:\\Users\\40748\\Desktop\\UBB\\Proiecte\\_java_Frappe\\src\\main\\resources\\images\\profilePics"));
+
+        optionalProfileImage=fileChooser.showOpenDialog(new Stage()).toString();
         picImgPreview.setFill(new ImagePattern(new Image(optionalProfileImage)));
     }
 

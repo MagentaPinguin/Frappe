@@ -24,6 +24,7 @@ import javafx.scene.shape.Circle;
 
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import repository.RepositoryException;
 import service.Service;
 import service.ServiceException;
 
@@ -493,32 +494,32 @@ public class UserGui extends AbstractController implements Observer {
 
     }
 
-    public void exitChatroom() {
+    public void exitChatroom() throws RepositoryException {
         if(openedChatroom==null)
             errorShow("Select a chatroom!");
 
-        if(openedChatroom.getParticipants().size()==1){
+        if(service.getParticipants(openedChatroom.getId())==1){
             ChoiceDialog<String> choice=new ChoiceDialog<>("No","Yes");
             var x=choice.showAndWait();
             if(x.isPresent() && x.get().equals("Yes")){
                 service.deleteChat(openedChatroom);
                 confirmationShow("You exit "+openedChatroom.getName()+", and the chatroom got deleted.");
+
             }
 
         } else
             try {
                 service.exitChat(openedChatroom,account);
                 confirmationShow("You exit "+openedChatroom.getName());
-
+                service.notifyObservers();
             } catch (ServiceException e) {
                 throw new RuntimeException(e);
             }
-
-        closeChatPane();
         service.notifyObservers();
+        closeChatPane();
     }
 
-    public void sendDirectMsg(ActionEvent actionEvent) {
+    public void sendDirectMsg() {
         var selected=tableFriends.getSelectionModel().getSelectedItem();
         if(selected==null){
             errorShow("Select a friend");
@@ -551,8 +552,6 @@ public class UserGui extends AbstractController implements Observer {
             errorShow(e.getMessage());
         }
         confirmationShow("Message sent to "+friend.getUsername());
-
     }
-
 
 }

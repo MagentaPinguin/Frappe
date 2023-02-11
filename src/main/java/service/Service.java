@@ -322,4 +322,8 @@ public class Service implements Subject {
 
     }
 
+    public long getParticipants(UUID id) throws RepositoryException {
+
+        return repositoryDBChatroom.getMembers(id).get().size();
+    }
 }
